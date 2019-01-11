@@ -1,7 +1,13 @@
 import 'package:flutter/material.dart';
-import 'drawer.dart';
+
+import 'package:clreader/pages/drawer.dart';
+import 'package:clreader/main.dart';
 
 class BookShelf extends StatefulWidget {
+  BookShelf(this.state);
+
+  final ClReaderState state;
+
   @override
   _BookShelfState createState() {
     return new _BookShelfState();
@@ -59,7 +65,7 @@ class _BookShelfState extends State<BookShelf> {
           ),
         ],
       ),
-      drawer: new ClDrawer(),
+      drawer: new ClDrawer(widget.state),
     );
   }
 }

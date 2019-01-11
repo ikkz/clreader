@@ -1,15 +1,14 @@
 import 'package:flutter/material.dart';
-import '../constents.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class ClDrawer extends StatefulWidget {
-  @override
-  _ClDrawerState createState() {
-    return new _ClDrawerState();
-  }
-}
+import 'package:clreader/main.dart';
+import 'package:clreader/constents.dart';
 
-class _ClDrawerState extends State<ClDrawer> {
-  bool isDarkTheme = true;
+class ClDrawer extends StatelessWidget {
+  ClDrawer(this.state);
+
+  final ClReaderState state;
+
   @override
   Widget build(BuildContext context) {
     Divider divider = Divider(
@@ -38,6 +37,9 @@ class _ClDrawerState extends State<ClDrawer> {
               ],
             ),
           ),
+          Container(
+            height: 10,
+          ),
           ListTile(
             leading: Icon(Icons.list),
             title: Text("书架管理"),
@@ -49,16 +51,61 @@ class _ClDrawerState extends State<ClDrawer> {
             onTap: () {},
           ),
           ListTile(
-            leading: Icon(Icons.color_lens),
+            leading: Icon(Icons.wb_sunny),
             title: Text("夜间模式"),
             trailing: Switch(
-              value: isDarkTheme,
+              value: state.isNightMode,
               onChanged: (bool value) {
-                setState(() {
-                  isDarkTheme = value;
-                });
+                state.setNightMode(value);
               },
             ),
+            onTap: () {
+              state.setNightMode(!state.isNightMode);
+            },
+          ),
+          AnimatedContainer(
+            duration: Duration(milliseconds: 500),
+            child: state.isNightMode
+                ? null
+                : ListTile(
+                    leading: Icon(Icons.color_lens),
+                    title: Text("修改主题色"),
+                    onTap: () {
+                      showDialog(
+                          context: context,
+                          builder: (BuildContext context) {
+                            var themeColors = new List<Widget>();
+                            materialColorInfo.forEach(
+                                (String colorName, MaterialColor color) {
+                              themeColors.add(SimpleDialogOption(
+                                  onPressed: () {
+                                    Navigator.pop(context);
+                                    state.setThemeName(colorName);
+                                  },
+                                  child: ListTile(
+                                    contentPadding: EdgeInsets.all(0),
+                                    title: Text(colorName),
+                                    trailing: CircleAvatar(
+                                      backgroundColor: color,
+                                      radius: 15,
+                                    ),
+                                  )));
+                            });
+                            return SimpleDialog(
+                              title: Column(
+                                children: <Widget>[
+                                  Padding(
+                                    padding: EdgeInsets.only(bottom: 10),
+                                    child: const Text("请选择主题色", style: Theme.of(context).textTheme.title,),
+                                  ),
+                                  divider
+                                ],
+                              ),
+                              children: themeColors,
+                            );
+                          });
+                    },
+                  ),
           ),
           divider,
           ListTile(
@@ -67,21 +114,27 @@ class _ClDrawerState extends State<ClDrawer> {
             onTap: () {},
           ),
           ListTile(
+            leading: Icon(Icons.bug_report),
+            title: Text("书源/Bug反馈"),
+            onTap: () {
+              launch(applicationUrl);
+            },
+          ),
+          ListTile(
             leading: Icon(Icons.info),
             title: Text("关于"),
             onTap: () {
               showAboutDialog(
                   context: context,
+                  applicationIcon: CircleAvatar(
+                      child: Text(
+                    "Cl",
+                    style: Theme.of(context).primaryTextTheme.title.merge(
+                        TextStyle(fontStyle: FontStyle.italic, fontSize: 30)),
+                  )),
                   applicationName: applicationName,
                   applicationVersion: applicationVersion,
-                  children: <Widget>[
-                    Padding(
-                      padding: EdgeInsets.all(16.0),
-                      child: Column(
-                        children: <Widget>[Text("Author: cildhdi")],
-                      ),
-                    )
-                  ].toList());
+                  children: <Widget>[Text("Author: cildhdi")].toList());
             },
           )
         ],
