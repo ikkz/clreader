@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'Config.dart';
-import 'pages/BookShelf.dart';
+import 'constents.dart';
+import 'pages/book_shelf.dart';
 void main() => runApp(MyApp());
 
 class MyApp extends StatelessWidget {
@@ -8,9 +8,7 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       title: applicationName,
-      theme: ThemeData(
-        primarySwatch: Colors.grey,
-      ),
+      theme: ThemeData.dark(),
       home: new BookShelf(),
     );
   }
