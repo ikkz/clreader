@@ -1,4 +1,4 @@
-package com.example.clreader;
+package top.miles_yang.clreader;
 
 import android.os.Bundle;
 import io.flutter.app.FlutterActivity;
