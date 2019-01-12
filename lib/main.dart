@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'package:clreader/constents.dart';
 import 'package:clreader/pages/book_shelf.dart';
@@ -26,31 +27,46 @@ class ClReaderStateShare extends InheritedWidget {
   bool updateShouldNotify(InheritedWidget oldWidget) {
     return false;
   }
+  
 }
 
 class ClReaderState extends State<ClReader> {
   bool _isNightMode = false;
   String _themeName = "蓝色";
 
+  @override
+  void initState() {
+    super.initState();
+    _loadThemeInfo();
+  }
+
+  _loadThemeInfo() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      _isNightMode = prefs.getBool("isNightMode") ?? false;
+      _themeName = prefs.getString("themeName") ?? "蓝色";
+    });
+  }
+
   bool get isNightMode => _isNightMode;
   String get themeName => _themeName;
 
-  ThemeData get themeData => _isNightMode
-      ? ThemeData.dark()
-      : ThemeData(primarySwatch: materialColorInfo[_themeName]);
-
-  void setNightMode(bool isNightMode) {
+  void setNightMode(bool isNightMode) async {
     if (isNightMode != _isNightMode) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       setState(() {
         _isNightMode = isNightMode;
+        prefs.setBool("isNightMode", _isNightMode);
       });
     }
   }
 
-  void setThemeName(String themeName) {
+  void setThemeName(String themeName) async {
     if (themeName != _themeName && materialColorInfo.containsKey(themeName)) {
+      SharedPreferences prefs = await SharedPreferences.getInstance();
       setState(() {
         _themeName = themeName;
+        prefs.setString("themeName", _themeName);
       });
     }
   }
@@ -61,7 +77,9 @@ class ClReaderState extends State<ClReader> {
         state: this,
         child: MaterialApp(
           title: applicationName,
-          theme: this.themeData,
+          theme: _isNightMode
+              ? ThemeData.dark()
+              : ThemeData(primarySwatch: materialColorInfo[_themeName]),
           home: new BookShelf(),
         ));
   }
