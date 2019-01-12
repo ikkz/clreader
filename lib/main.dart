@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:scoped_model/scoped_model.dart';
 
 import 'package:clreader/constents.dart';
 import 'package:clreader/pages/book_shelf.dart';
+import 'package:clreader/models/main_model.dart';
 
 void main() => runApp(ClReader());
 
@@ -27,7 +29,6 @@ class ClReaderStateShare extends InheritedWidget {
   bool updateShouldNotify(InheritedWidget oldWidget) {
     return false;
   }
-  
 }
 
 class ClReaderState extends State<ClReader> {
@@ -75,12 +76,15 @@ class ClReaderState extends State<ClReader> {
   Widget build(BuildContext context) {
     return ClReaderStateShare(
         state: this,
-        child: MaterialApp(
-          title: applicationName,
-          theme: _isNightMode
-              ? ThemeData.dark()
-              : ThemeData(primarySwatch: materialColorInfo[_themeName]),
-          home: new BookShelf(),
+        child: ScopedModel<ClMainModel>(
+          model: ClMainModel(),
+          child: MaterialApp(
+            title: applicationName,
+            theme: _isNightMode
+                ? ThemeData.dark()
+                : ThemeData(primarySwatch: materialColorInfo[_themeName]),
+            home: new BookShelf(),
+          ),
         ));
   }
 }
