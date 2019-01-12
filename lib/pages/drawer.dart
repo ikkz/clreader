@@ -3,17 +3,16 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:clreader/main.dart';
 import 'package:clreader/constents.dart';
+import 'package:clreader/pages/help_author.dart';
 
 class ClDrawer extends StatelessWidget {
-  ClDrawer(this.state);
-
-  final ClReaderState state;
-
   @override
   Widget build(BuildContext context) {
+    ClReaderState state = ClReaderStateShare.of(context).state;
+
     Divider divider = Divider(
+      height: 1,
       color: Colors.grey,
-      height: 10.0,
     );
     return Drawer(
         child: SingleChildScrollView(
@@ -70,6 +69,13 @@ class ClDrawer extends StatelessWidget {
                 : ListTile(
                     leading: Icon(Icons.color_lens),
                     title: Text("修改主题色"),
+                    trailing: Padding(
+                      child: CircleAvatar(
+                        backgroundColor: materialColorInfo[state.themeName],
+                        radius: 13,
+                      ),
+                      padding: EdgeInsets.only(right: 10),
+                    ),
                     onTap: () {
                       showDialog(
                           context: context,
@@ -92,17 +98,22 @@ class ClDrawer extends StatelessWidget {
                                   )));
                             });
                             return SimpleDialog(
-                              title: Column(
-                                children: <Widget>[
-                                  Padding(
-                                    padding: EdgeInsets.only(bottom: 10),
-                                    child: const Text("请选择主题色", style: Theme.of(context).textTheme.title,),
-                                  ),
-                                  divider
-                                ],
-                              ),
-                              children: themeColors,
-                            );
+                                titlePadding: EdgeInsets.all(0),
+                                title: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: <Widget>[
+                                    Padding(
+                                      padding: EdgeInsets.all(15),
+                                      child: Text(
+                                        "请选择主题色",
+                                        style:
+                                            Theme.of(context).textTheme.title,
+                                      ),
+                                    ),
+                                    divider
+                                  ],
+                                ),
+                                children: themeColors);
                           });
                     },
                   ),
@@ -111,7 +122,11 @@ class ClDrawer extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.favorite),
             title: Text("救助作者"),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return HelpAuthor();
+              }));
+            },
           ),
           ListTile(
             leading: Icon(Icons.bug_report),

@@ -12,6 +12,22 @@ class ClReader extends StatefulWidget {
   }
 }
 
+class ClReaderStateShare extends InheritedWidget {
+  ClReaderStateShare({@required this.state, Widget child})
+      : super(child: child);
+
+  final ClReaderState state;
+
+  static ClReaderStateShare of(BuildContext context) {
+    return context.inheritFromWidgetOfExactType(ClReaderStateShare);
+  }
+
+  @override
+  bool updateShouldNotify(InheritedWidget oldWidget) {
+    return false;
+  }
+}
+
 class ClReaderState extends State<ClReader> {
   bool _isNightMode = false;
   String _themeName = "蓝色";
@@ -41,10 +57,12 @@ class ClReaderState extends State<ClReader> {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      title: applicationName,
-      theme: this.themeData,
-      home: new BookShelf(this),
-    );
+    return ClReaderStateShare(
+        state: this,
+        child: MaterialApp(
+          title: applicationName,
+          theme: this.themeData,
+          home: new BookShelf(),
+        ));
   }
 }
