@@ -7,7 +7,7 @@ import 'package:clreader/book/book_info.dart';
 import 'package:clreader/models/test_data.dart';
 
 class AllBooksModel extends Model {
-  final booksKey = "books";
+  static final booksKey = "books";
   Map<int, BookInfo> books = Map<int, BookInfo>();
 
   allBooksModelLoad() async {

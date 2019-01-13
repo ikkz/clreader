@@ -13,6 +13,10 @@ class ClMainModel extends Model
     allBooksModelLoad();
   }
 
+  notify() {
+    notifyListeners();
+  }
+
   static ClMainModel of(BuildContext context) {
     return ScopedModel.of<ClMainModel>(context, rebuildOnChange: true);
   }
