@@ -1,3 +1,5 @@
+import 'package:meta/meta.dart';
+
 class BookInfo {
   String urlCover = "";
   String name = "";
@@ -6,7 +8,11 @@ class BookInfo {
   int srcId;
 
   BookInfo(
-      {this.urlCover, this.name, this.author, this.introduction, this.srcId});
+      {@required this.urlCover,
+      @required this.name,
+      @required this.author,
+      @required this.introduction,
+      @required this.srcId});
 
   BookInfo.fromJson(Map<String, dynamic> json)
       : urlCover = json["urlCover"],
