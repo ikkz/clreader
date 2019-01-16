@@ -79,7 +79,7 @@ class ClReaderState extends State<ClReader> {
         child: ScopedModel<ClMainModel>(
           model: ClMainModel(),
           child: MaterialApp(
-            title: applicationName,
+            title: Strings.applicationName,
             theme: _isNightMode
                 ? ThemeData.dark()
                 : ThemeData(primarySwatch: materialColorInfo[_themeName]),

@@ -129,7 +129,7 @@ class ClDrawer extends StatelessWidget {
             leading: Icon(Icons.bug_report),
             title: Text("书源/Bug反馈"),
             onTap: () {
-              launch(applicationUrl);
+              launch(Strings.applicationUrl);
             },
           ),
           ListTile(
@@ -144,9 +144,9 @@ class ClDrawer extends StatelessWidget {
                     style: Theme.of(context).primaryTextTheme.title.merge(
                         TextStyle(fontStyle: FontStyle.italic, fontSize: 30)),
                   )),
-                  applicationName: applicationName,
-                  applicationVersion: applicationVersion,
-                  children: <Widget>[Text("Author: cildhdi")].toList());
+                  applicationName: Strings.applicationName,
+                  applicationVersion: Strings.applicationVersion,
+                  children: <Widget>[Text("Author: cildhdi")]);
             },
           )
         ],

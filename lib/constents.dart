@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 
-const String applicationName = "Cl 阅读";
-const String applicationVersion = "0.0.1";
-const String applicationUrl = "https://github.com/cildhdi/ClReader";
+class Strings {
+  static const String applicationName = "Cl 阅读";
+  static const String applicationVersion = "0.0.1";
+  static const String applicationUrl = "https://github.com/cildhdi/ClReader";
+}
 
 const Map<String, MaterialColor> materialColorInfo = {
   "粉色": Colors.pink,
