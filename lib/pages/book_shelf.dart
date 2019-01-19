@@ -12,36 +12,6 @@ class BookShelf extends StatefulWidget {
   }
 }
 
-class _SearchDelegate extends SearchDelegate<String> {
-  @override
-  List<Widget> buildActions(BuildContext context) {
-    return <Widget>[
-      Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
-          child: Icon(Icons.search)),
-    ].toList();
-  }
-
-  @override
-  Widget buildLeading(BuildContext context) {
-    return null;
-  }
-
-  @override
-  Widget buildResults(BuildContext context) {
-    return ListView(
-      children: <Widget>[],
-    );
-  }
-
-  @override
-  Widget buildSuggestions(BuildContext context) {
-    return ListView(
-      children: <Widget>[],
-    );
-  }
-}
-
 class _BookShelfState extends State<BookShelf> {
   Widget _buildAppBar(BuildContext context) {
     final mainModel = ClMainModel.of(context);
@@ -103,82 +73,94 @@ class _BookShelfState extends State<BookShelf> {
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: IconButton(
             icon: Icon(Icons.search),
-            onPressed: () {
-              showSearch(
-                context: context,
-                delegate: _SearchDelegate(),
-              );
-            },
+            onPressed: () {},
           ),
         ),
       ],
     );
   }
 
-  Widget _buildBody(BuildContext context) {
-    var list = <Widget>[];
+  Widget _buildBookShelf(BuildContext context) {
     final mainModel = ClMainModel.of(context);
     final books = mainModel.books;
-    final bookShelves = mainModel.bookShelves;
+    final selectedBookShelf =
+        mainModel.bookShelves[mainModel.selectedBookShelf];
 
-    if (bookShelves.containsKey(mainModel.selectedBookShelf)) {
-      bookShelves[mainModel.selectedBookShelf]?.forEach((int i) {
-        if (books.containsKey(i)) {
-          BookInfo info = books[i];
-          list.add(GestureDetector(
-            onTap: () {
-              debugPrint("taped:${info.name}");
-            },
-            child: Card(
-              margin: EdgeInsets.all(5),
-              child: SizedBox.fromSize(
-                size: Size.fromHeight(100),
-                child: Row(
-                  children: <Widget>[
-                    SizedBox.fromSize(
-                      size: Size(50, 100),
-                      child: CachedNetworkImage(
-                        imageUrl: info.urlCover,
-                        placeholder: new CircularProgressIndicator(),
-                        errorWidget: new Icon(Icons.error),
+    return ListView.builder(
+      padding: EdgeInsets.all(10),
+      itemCount: selectedBookShelf?.length ?? 0,
+      itemBuilder: (context, i) {
+        BookInfo info = books[selectedBookShelf[i]];
+        return Card(
+          child: Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Container(
+                padding: EdgeInsets.all(5),
+                height: 100,
+                width: 80,
+                alignment: Alignment.center,
+                child: CachedNetworkImage(
+                  imageUrl: info.urlCover,
+                  placeholder: CircularProgressIndicator(),
+                  errorWidget: Icon(Icons.error),
+                ),
+              ),
+              Expanded(
+                flex: 1,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: <Widget>[
+                      Text(
+                        info.name,
+                        style: Theme.of(context).textTheme.subhead,
                       ),
-                    ),
-                    Padding(
-                      padding: EdgeInsets.all(15),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                      Row(
                         children: <Widget>[
-                          Text(
-                            info.name,
-                            style: Theme.of(context).textTheme.subhead,
+                          CircleAvatar(
+                            radius: 7,
+                            backgroundColor: Colors.grey,
+                            foregroundColor: Colors.white,
+                            child: Icon(
+                              Icons.person,
+                              size: 14,
+                            ),
+                          ),
+                          Container(
+                            width: 5,
                           ),
                           Text(
                             info.author,
-                            style: Theme.of(context).textTheme.subtitle,
+                            style: Theme.of(context)
+                                .textTheme
+                                .subtitle
+                                .copyWith(color: Colors.grey),
                           ),
-                          // Text(
-                          //   info.introduction,
-                          //   style: Theme.of(context).textTheme.body1,
-                          //   overflow: TextOverflow.clip,
-                          // )
                         ],
                       ),
-                    )
-                  ],
+                      Container(height: 5),
+                      Text(
+                        info.introduction,
+                        maxLines: 3,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.overline,
+                      ),
+                    ],
+                  ),
                 ),
-              ),
-            ),
-          ));
-        }
-      });
-    }
-    return SingleChildScrollView(
-        child: Padding(
-      padding: EdgeInsets.symmetric(horizontal: 10),
-      child: Column(
-        children: list,
-      ),
-    ));
+              )
+            ],
+          ),
+        );
+      },
+    );
+  }
+
+  Widget _buildBody(BuildContext context) {
+    return _buildBookShelf(context);
   }
 
   @override
