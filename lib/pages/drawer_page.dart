@@ -3,9 +3,9 @@ import 'package:url_launcher/url_launcher.dart';
 
 import 'package:clreader/main.dart';
 import 'package:clreader/constents.dart';
-import 'package:clreader/pages/help_author.dart';
+import 'package:clreader/pages/help_author_page.dart';
 
-class ClDrawer extends StatelessWidget {
+class DrawerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     ClReaderState state = ClReaderStateShare.of(context).state;
@@ -121,7 +121,7 @@ class ClDrawer extends StatelessWidget {
             title: Text("救助作者"),
             onTap: () {
               Navigator.push(context, MaterialPageRoute(builder: (context) {
-                return HelpAuthor();
+                return HelpAuthorPage();
               }));
             },
           ),

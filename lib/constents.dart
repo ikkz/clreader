@@ -4,6 +4,7 @@ class Strings {
   static const String applicationName = "Cl 阅读";
   static const String applicationVersion = "0.0.1";
   static const String applicationUrl = "https://github.com/cildhdi/ClReader";
+  static const String databaseName = "clr.db";
 }
 
 const Map<String, MaterialColor> materialColorInfo = {

@@ -1,20 +1,19 @@
 import 'package:scoped_model/scoped_model.dart';
 import 'package:flutter/material.dart';
+import 'package:sqflite/sqflite.dart';
 
+import 'package:clreader/models/base_model.dart';
 import 'package:clreader/models/book_shelves_model.dart';
-import 'package:clreader/models/all_book_srcs_model.dart';
-import 'package:clreader/models/all_books.dart';
+import 'package:clreader/models/book_srcs_model.dart';
+import 'package:clreader/models/books_model.dart';
 
-class ClMainModel extends Model
-    with BookShelvesModel, AllBookSrcsModel, AllBooksModel {
-  ClMainModel() {
-    bookShelvesModelLoad();
-    allBookSrcsModelLoad();
-    allBooksModelLoad();
-  }
+class ClMainModel extends BaseModel
+    with BookShelvesModel, BookSrcsModel, BooksModel {
+  ClMainModel() {}
 
-  notify() {
-    notifyListeners();
+  init() async {
+    await Sqflite.setDebugModeOn(true);
+    await openDb();
   }
 
   static ClMainModel of(BuildContext context) {

@@ -1,11 +1,20 @@
 import 'package:meta/meta.dart';
 
+final String tableBooks = "books";
+final String columnBookId = "_id";
+final String columnBookName = "name";
+final String columnBookAuthor = "author";
+final String columnBookCoverUrl = "urlCover";
+final String columnBookIntroduction = "introduction";
+final String cloumnBookSrc = "srcId";
+
 class BookInfo {
+  int id;
+  int srcId;
   String urlCover = "";
   String name = "";
   String author = "";
   String introduction = "";
-  int srcId;
 
   BookInfo(
       {@required this.urlCover,
@@ -14,20 +23,25 @@ class BookInfo {
       @required this.introduction,
       @required this.srcId});
 
-  BookInfo.fromJson(Map<String, dynamic> json)
-      : urlCover = json["urlCover"],
-        name = json["name"],
-        author = json["author"],
-        introduction = json["introduction"],
-        srcId = json["srcId"];
+  BookInfo.fromMap(Map<String, dynamic> map)
+      : urlCover = map[columnBookCoverUrl],
+        name = map[columnBookName],
+        author = map[columnBookAuthor],
+        introduction = map[columnBookIntroduction],
+        srcId = map[cloumnBookSrc],
+        id = map[columnBookId];
 
-  Map<String, dynamic> toJson() => <String, dynamic>{
-        "urlCover": urlCover,
-        "name": name,
-        "author": author,
-        "introduction": introduction,
-        "srcId": srcId,
-      };
-
-  int get id => "$name$author$srcId".hashCode;
+  Map<String, dynamic> toMap() {
+    var map = <String, dynamic>{
+      columnBookCoverUrl: urlCover,
+      columnBookName: name,
+      columnBookAuthor: author,
+      columnBookIntroduction: introduction,
+      cloumnBookSrc: srcId
+    };
+    if (id != null) {
+      map[columnBookId] = id;
+    }
+    return map;
+  }
 }

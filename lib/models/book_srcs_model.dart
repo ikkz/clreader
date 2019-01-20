@@ -4,7 +4,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import 'dart:convert';
 
-class AllBookSrcsModel extends Model {
+class BookSrcsModel extends Model {
   static final String srcsEnableKey = "srcsEnable";
   Map<int, bool> srcsEnable = Map<int, bool>();
   Map<int, BookSrc> srcs = Map<int, BookSrc>();

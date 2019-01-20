@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:clipboard_manager/clipboard_manager.dart';
 
-class HelpAuthor extends StatelessWidget {
+class HelpAuthorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

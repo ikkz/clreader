@@ -3,16 +3,16 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:clreader/models/main_model.dart';
 import 'package:clreader/book/book_info.dart';
-import 'package:clreader/pages/drawer.dart';
+import 'package:clreader/pages/drawer_page.dart';
 
-class BookShelf extends StatefulWidget {
+class BookShelfPage extends StatefulWidget {
   @override
-  _BookShelfState createState() {
-    return new _BookShelfState();
+  _BookShelfPageState createState() {
+    return new _BookShelfPageState();
   }
 }
 
-class _BookShelfState extends State<BookShelf> {
+class _BookShelfPageState extends State<BookShelfPage> {
   Widget _buildAppBar(BuildContext context) {
     final mainModel = ClMainModel.of(context);
     final bookShelves = mainModel.bookShelves;
@@ -167,7 +167,7 @@ class _BookShelfState extends State<BookShelf> {
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: _buildAppBar(context),
-        drawer: new ClDrawer(),
+        drawer: new DrawerPage(),
         body: _buildBody(context));
   }
 }
