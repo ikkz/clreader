@@ -77,7 +77,7 @@ class ClReaderState extends State<ClReader> {
     return ClReaderStateShare(
         state: this,
         child: ScopedModel<ClMainModel>(
-          model: ClMainModel(),
+          model: ClMainModel.instance,
           child: MaterialApp(
             title: Strings.applicationName,
             theme: _isNightMode

@@ -1,7 +1,7 @@
 import 'package:clreader/book/book_info.dart';
 import 'package:clreader/book/book_src.dart';
 
-BookSrc testBookSrc = BookSrc(name: "天成小说网");
+BookSrc testBookSrc = BookSrc();
 
 BookInfo testBookInfo = BookInfo(
   urlCover:

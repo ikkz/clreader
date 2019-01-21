@@ -12,12 +12,12 @@ class BookShelf {
   BookShelf.fromMap(Map<String, dynamic> map)
       : id = map[columnBookShelfId],
         name = map[columnBookShelfName],
-        bookIds = JsonDecoder().convert(map[columnBookShelfBookIds]);
+        bookIds = json.decode(map[columnBookShelfBookIds]);
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
       columnBookShelfName: name,
-      columnBookShelfBookIds: JsonEncoder().convert(bookIds)
+      columnBookShelfBookIds: json.encode(bookIds)
     };
     if (id != null) {
       map[columnBookShelfId] = id;

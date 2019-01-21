@@ -1,17 +1,22 @@
 import 'package:sqflite/sqflite.dart';
 import 'package:scoped_model/scoped_model.dart';
 import 'package:path/path.dart';
+import 'dart:async';
 
 import 'package:clreader/constents.dart';
 import 'package:clreader/book/book_info.dart';
 import 'package:clreader/book/book_shelf.dart';
 
 class BaseModel extends Model {
-  Database database;
+  Database _database;
 
-  void openDb() async {
+  Future<Database> get database async {
+    return _database ?? await openDb();
+  }
+
+  Future<Database> openDb() async {
     String path = join(await getDatabasesPath(), Strings.databaseName);
-    database = await openDatabase(path, version: 1,
+    return await openDatabase(path, version: 1,
         onCreate: (Database db, int version) async {
       await db.execute('''
           create table $tableBooks (
@@ -32,6 +37,6 @@ class BaseModel extends Model {
   }
 
   void closeDb() async {
-    database.close();
+    await _database.close();
   }
 }

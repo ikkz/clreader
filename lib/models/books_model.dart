@@ -5,18 +5,14 @@ import 'package:clreader/book/book_info.dart';
 
 class BooksModel extends BaseModel {
   Future<BookInfo> insertBook(BookInfo bookInfo) async {
-    if (database == null) {
-      return null;
-    }
-    bookInfo.id = await database.insert(tableBooks, bookInfo.toMap());
+    final db = await database;
+    bookInfo.id = await db.insert(tableBooks, bookInfo.toMap());
     return bookInfo;
   }
 
   Future<BookInfo> getBook(int id) async {
-    if (database == null) {
-      return null;
-    }
-    List<Map> maps = await database.query(tableBooks,
+    final db = await database;
+    List<Map> maps = await db.query(tableBooks,
         columns: [
           columnBookId,
           columnBookName,
@@ -34,28 +30,22 @@ class BooksModel extends BaseModel {
   }
 
   Future<List<BookInfo>> getBooks() async {
-    if (database == null) {
-      return null;
-    }
-    List<Map> maps = await database.query(tableBooks);
+    final db = await database;
+    List<Map> maps = await db.query(tableBooks);
     return maps.map((Map map) {
       return BookInfo.fromMap(map);
     });
   }
 
   Future<int> deleteBook(int id) async {
-    if (database == null) {
-      return null;
-    }
-    return await database
+    final db = await database;
+    return await db
         .delete(tableBooks, where: "$columnBookId = ?", whereArgs: [id]);
   }
 
   Future<int> updateBook(BookInfo bookInfo) async {
-    if (database == null) {
-      return null;
-    }
-    return await database.update(tableBooks, bookInfo.toMap(),
+    final db = await database;
+    return await db.update(tableBooks, bookInfo.toMap(),
         where: "$columnBookId = ?", whereArgs: [bookInfo.id]);
   }
 }

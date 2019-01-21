@@ -9,12 +9,9 @@ import 'package:clreader/models/books_model.dart';
 
 class ClMainModel extends BaseModel
     with BookShelvesModel, BookSrcsModel, BooksModel {
-  ClMainModel() {}
+  ClMainModel._();
 
-  init() async {
-    await Sqflite.setDebugModeOn(true);
-    await openDb();
-  }
+  static final ClMainModel instance = ClMainModel._();
 
   static ClMainModel of(BuildContext context) {
     return ScopedModel.of<ClMainModel>(context, rebuildOnChange: true);

@@ -10,7 +10,7 @@ final String cloumnBookSrc = "srcId";
 
 class BookInfo {
   int id;
-  int srcId;
+  String srcId;
   String urlCover = "";
   String name = "";
   String author = "";
