@@ -32,9 +32,11 @@ class BooksModel extends BaseModel {
   Future<List<BookInfo>> getBooks() async {
     final db = await database;
     List<Map> maps = await db.query(tableBooks);
-    return maps.map((Map map) {
-      return BookInfo.fromMap(map);
+    List<BookInfo> books = [];
+    maps.forEach((map) {
+      books.add(BookInfo.fromMap(map));
     });
+    return books;
   }
 
   Future<int> deleteBook(int id) async {

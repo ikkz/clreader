@@ -9,10 +9,18 @@ class BookShelf {
   int id;
   String name;
   List<int> bookIds;
-  BookShelf.fromMap(Map<String, dynamic> map)
-      : id = map[columnBookShelfId],
-        name = map[columnBookShelfName],
-        bookIds = json.decode(map[columnBookShelfBookIds]);
+
+  BookShelf({this.name, this.bookIds});
+
+  BookShelf.fromMap(Map<String, dynamic> map) {
+    id = map[columnBookShelfId];
+    name = map[columnBookShelfName];
+    var list = json.decode(map[columnBookShelfBookIds]);
+    bookIds = [];
+    list.forEach((dynamic i) {
+      bookIds.add(i);
+    });
+  }
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{

@@ -3,6 +3,7 @@ import 'package:scoped_model/scoped_model.dart';
 
 import 'package:clreader/constents.dart';
 import 'package:clreader/models/main_model.dart';
+import 'package:clreader/pages/book_shelf_page.dart';
 
 void main() => runApp(ClReader());
 
@@ -14,38 +15,37 @@ class ClReader extends StatefulWidget {
 }
 
 class ClReaderState extends State<ClReader> {
+  Widget _defalutHome(BuildContext context) {
+    return MaterialApp(
+        title: Strings.applicationName,
+        theme: ThemeData.light(),
+        home: BookShelfPage());
+  }
+
   @override
   Widget build(BuildContext context) {
-    return ScopedModel<ClMainModel>(
-        model: ClMainModel.instance,
-        child: FutureBuilder(
-          future: ClMainModel.of(context).isNightMode,
-          builder: (context, ssIsNightMode) {
-            if (ssIsNightMode.connectionState == ConnectionState.done) {
-              return FutureBuilder(
-                  future: ClMainModel.of(context).themeName,
-                  builder: (context, ssThemeName) {
-                    if (ssThemeName.connectionState == ConnectionState.done) {
-                      return MaterialApp(
-                          title: Strings.applicationName,
-                          theme: ssIsNightMode.data
-                              ? ThemeData.dark()
-                              : ThemeData(
-                                  primarySwatch:
-                                      materialColorInfo[ssThemeName.data]),
-                          home: Center(
-                            child: Icon(Icons.wifi),
-                          ));
-                    } else {
-                      return Center(child: CircularProgressIndicator());
-                    }
-                  });
-            } else {
-              return Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-          },
-        ));
+    return FutureBuilder(
+      future: ClMainModel.instance,
+      builder: (context, AsyncSnapshot<ClMainModel> ssModel) {
+        if (ssModel.connectionState == ConnectionState.done) {
+          return ScopedModel<ClMainModel>(
+              model: ssModel.data,
+              child: ScopedModelDescendant<ClMainModel>(
+                builder: (context, child, model) {
+                  return MaterialApp(
+                      title: Strings.applicationName,
+                      theme: model.isNightMode
+                          ? ThemeData.dark()
+                          : ThemeData(
+                              primarySwatch:
+                                  materialColorInfo[model.themeName]),
+                      home: BookShelfPage());
+                },
+              ));
+        } else {
+          return _defalutHome(context);
+        }
+      },
+    );
   }
 }

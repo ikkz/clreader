@@ -25,9 +25,11 @@ class BookShelvesModel extends BaseModel {
   Future<List<BookShelf>> getBookShelves() async {
     final db = await database;
     List<Map> maps = await db.query(tableBookShelves);
-    return maps.map((Map map) {
-      return BookShelf.fromMap(map);
+    List<BookShelf> shelves = [];
+    maps.forEach((Map map) {
+      shelves.add(BookShelf.fromMap(map));
     });
+    return shelves;
   }
 
   Future<int> deleteBookShelf(int id) async {

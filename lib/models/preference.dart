@@ -9,32 +9,37 @@ final String prefThemeName = "themeName";
 final String prefSelectedBookShelf = "selectedBookShelf";
 
 class Preference extends BaseModel {
-  Future<bool> get isNightMode async {
+  bool isNightMode;
+  String themeName;
+
+  void initIsNightMode() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getBool(prefIsNightMode) ?? false;
+    isNightMode = prefs.getBool(prefIsNightMode) ?? false;
   }
 
-  Future<String> get themeName async {
+  void initThemeName() async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(prefThemeName) ?? "蓝色";
+    themeName = prefs.getString(prefThemeName) ?? "蓝色";
   }
 
   Future<String> get selectedBookShelf async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(prefSelectedBookShelf);
+    return prefs.getString(prefSelectedBookShelf) ?? "默认书架";
   }
 
   void setNightMode(bool isNightMode) async {
+    this.isNightMode = isNightMode;
+    notifyListeners();
     final prefs = await SharedPreferences.getInstance();
     prefs.setBool(prefIsNightMode, isNightMode);
-    notifyListeners();
   }
 
   void setThemeName(String themeName) async {
     if (materialColorInfo.containsKey(themeName)) {
+      this.themeName = themeName;
+      notifyListeners();
       final prefs = await SharedPreferences.getInstance();
       prefs.setString(prefThemeName, themeName);
-      notifyListeners();
     }
   }
 

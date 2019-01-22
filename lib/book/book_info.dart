@@ -17,7 +17,8 @@ class BookInfo {
   String introduction = "";
 
   BookInfo(
-      {@required this.urlCover,
+      {this.id,
+      @required this.urlCover,
       @required this.name,
       @required this.author,
       @required this.introduction,

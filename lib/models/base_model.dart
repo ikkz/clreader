@@ -12,7 +12,7 @@ class BaseModel extends Model {
   Database _database;
 
   Future<Database> get database async {
-    return _database ?? await openDb();
+    return _database ?? (_database = await openDb());
   }
 
   Future<Database> openDb() async {
@@ -26,7 +26,7 @@ class BaseModel extends Model {
             $columnBookAuthor text not null,
             $columnBookCoverUrl text not null,
             $columnBookIntroduction text not null,
-            $cloumnBookSrc integer not null)
+            $cloumnBookSrc text not null)
           ''');
       await db.execute('''
           create table $tableBookShelves (
