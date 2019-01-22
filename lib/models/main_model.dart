@@ -6,9 +6,10 @@ import 'package:clreader/models/base_model.dart';
 import 'package:clreader/models/book_shelves_model.dart';
 import 'package:clreader/models/book_srcs_model.dart';
 import 'package:clreader/models/books_model.dart';
+import 'package:clreader/models/preference.dart';
 
 class ClMainModel extends BaseModel
-    with BookShelvesModel, BookSrcsModel, BooksModel {
+    with BookShelvesModel, BookSrcsModel, BooksModel, Preference {
   ClMainModel._();
 
   static final ClMainModel instance = ClMainModel._();

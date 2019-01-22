@@ -1,14 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-import 'package:clreader/main.dart';
+import 'package:clreader/models/main_model.dart';
 import 'package:clreader/constents.dart';
 import 'package:clreader/pages/help_author_page.dart';
 
 class DrawerPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    ClReaderState state = ClReaderStateShare.of(context).state;
+    final mainModel = ClMainModel.of(context);
     Divider divider = Divider(
       height: 1,
       color: Colors.grey,
@@ -49,72 +49,108 @@ class DrawerPage extends StatelessWidget {
             title: Text("搜索设置"),
             onTap: () {},
           ),
-          ListTile(
-            leading: Icon(Icons.wb_sunny),
-            title: Text("夜间模式"),
-            trailing: Switch(
-              value: state.isNightMode,
-              onChanged: (bool value) {
-                state.setNightMode(value);
-              },
-            ),
-            onTap: () {
-              state.setNightMode(!state.isNightMode);
+          FutureBuilder(
+            future: mainModel.isNightMode,
+            builder: (context, ssIsNightMode) {
+              if (ssIsNightMode.connectionState == ConnectionState.done) {
+                return ListTile(
+                  leading: Icon(Icons.wb_sunny),
+                  title: Text("夜间模式"),
+                  trailing: Switch(
+                    value: ssIsNightMode.data,
+                    onChanged: (bool value) {
+                      mainModel.setNightMode(value);
+                    },
+                  ),
+                  onTap: () {
+                    mainModel.setNightMode(!ssIsNightMode.data);
+                  },
+                );
+              } else {
+                return Center(
+                  child: CircularProgressIndicator(),
+                );
+              }
             },
           ),
-          Offstage(
-            offstage: state.isNightMode,
-            child: ListTile(
-              leading: Icon(Icons.color_lens),
-              title: Text("修改主题色"),
-              trailing: Padding(
-                child: CircleAvatar(
-                  backgroundColor: materialColorInfo[state.themeName],
-                  radius: 13,
-                ),
-                padding: EdgeInsets.only(right: 10),
-              ),
-              onTap: () {
-                showDialog(
-                    context: context,
-                    builder: (BuildContext context) {
-                      var themeColors = new List<Widget>();
-                      materialColorInfo
-                          .forEach((String colorName, MaterialColor color) {
-                        themeColors.add(SimpleDialogOption(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              state.setThemeName(colorName);
-                            },
-                            child: ListTile(
-                              contentPadding: EdgeInsets.all(0),
-                              title: Text(colorName),
-                              trailing: CircleAvatar(
-                                backgroundColor: color,
-                                radius: 15,
-                              ),
-                            )));
-                      });
-                      return SimpleDialog(
-                          titlePadding: EdgeInsets.all(0),
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.all(15),
-                                child: Text(
-                                  "请选择主题色",
-                                  style: Theme.of(context).textTheme.title,
-                                ),
-                              ),
-                              divider
-                            ],
-                          ),
-                          children: themeColors);
-                    });
-              },
-            ),
-          ),
+          FutureBuilder(
+              future: mainModel.isNightMode,
+              builder: (context, ssIsNightMode) {
+                if (ssIsNightMode.connectionState == ConnectionState.done) {
+                  return Offstage(
+                    offstage: ssIsNightMode.data,
+                    child: ListTile(
+                      leading: Icon(Icons.color_lens),
+                      title: Text("修改主题色"),
+                      trailing: Padding(
+                        child: FutureBuilder(
+                          future: mainModel.themeName,
+                          builder: (context, ssThemeName) {
+                            if (ssThemeName.connectionState ==
+                                ConnectionState.done) {
+                              return CircleAvatar(
+                                backgroundColor:
+                                    materialColorInfo[ssThemeName.data],
+                                radius: 13,
+                              );
+                            } else {
+                              return Center(
+                                child: CircularProgressIndicator(),
+                              );
+                            }
+                          },
+                        ),
+                        padding: EdgeInsets.only(right: 10),
+                      ),
+                      onTap: () {
+                        showDialog(
+                            context: context,
+                            builder: (BuildContext context) {
+                              var themeColors = new List<Widget>();
+                              materialColorInfo.forEach(
+                                  (String colorName, MaterialColor color) {
+                                themeColors.add(SimpleDialogOption(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                      mainModel.setThemeName(colorName);
+                                    },
+                                    child: ListTile(
+                                      contentPadding: EdgeInsets.all(0),
+                                      title: Text(colorName),
+                                      trailing: CircleAvatar(
+                                        backgroundColor: color,
+                                        radius: 15,
+                                      ),
+                                    )));
+                              });
+                              return SimpleDialog(
+                                  titlePadding: EdgeInsets.all(0),
+                                  title: Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: <Widget>[
+                                      Padding(
+                                        padding: EdgeInsets.all(15),
+                                        child: Text(
+                                          "请选择主题色",
+                                          style:
+                                              Theme.of(context).textTheme.title,
+                                        ),
+                                      ),
+                                      divider
+                                    ],
+                                  ),
+                                  children: themeColors);
+                            });
+                      },
+                    ),
+                  );
+                } else {
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+              }),
           divider,
           ListTile(
             leading: Icon(Icons.favorite),

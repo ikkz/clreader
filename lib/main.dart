@@ -1,9 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:shared_preferences/shared_preferences.dart';
 import 'package:scoped_model/scoped_model.dart';
 
 import 'package:clreader/constents.dart';
-import 'package:clreader/pages/book_shelf_page.dart';
 import 'package:clreader/models/main_model.dart';
 
 void main() => runApp(ClReader());
@@ -15,76 +13,39 @@ class ClReader extends StatefulWidget {
   }
 }
 
-class ClReaderStateShare extends InheritedWidget {
-  ClReaderStateShare({@required this.state, Widget child})
-      : super(child: child);
-
-  final ClReaderState state;
-
-  static ClReaderStateShare of(BuildContext context) {
-    return context.inheritFromWidgetOfExactType(ClReaderStateShare);
-  }
-
-  @override
-  bool updateShouldNotify(InheritedWidget oldWidget) {
-    return false;
-  }
-}
-
 class ClReaderState extends State<ClReader> {
-  bool _isNightMode = false;
-  String _themeName = "蓝色";
-
-  @override
-  void initState() {
-    super.initState();
-    _loadThemeInfo();
-  }
-
-  _loadThemeInfo() async {
-    SharedPreferences prefs = await SharedPreferences.getInstance();
-    setState(() {
-      _isNightMode = prefs.getBool("isNightMode") ?? false;
-      _themeName = prefs.getString("themeName") ?? "蓝色";
-    });
-  }
-
-  bool get isNightMode => _isNightMode;
-  String get themeName => _themeName;
-
-  void setNightMode(bool isNightMode) async {
-    if (isNightMode != _isNightMode) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      setState(() {
-        _isNightMode = isNightMode;
-        prefs.setBool("isNightMode", _isNightMode);
-      });
-    }
-  }
-
-  void setThemeName(String themeName) async {
-    if (themeName != _themeName && materialColorInfo.containsKey(themeName)) {
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      setState(() {
-        _themeName = themeName;
-        prefs.setString("themeName", _themeName);
-      });
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    return ClReaderStateShare(
-        state: this,
-        child: ScopedModel<ClMainModel>(
-          model: ClMainModel.instance,
-          child: MaterialApp(
-            title: Strings.applicationName,
-            theme: _isNightMode
-                ? ThemeData.dark()
-                : ThemeData(primarySwatch: materialColorInfo[_themeName]),
-            home: new BookShelfPage(),
-          ),
+    return ScopedModel<ClMainModel>(
+        model: ClMainModel.instance,
+        child: FutureBuilder(
+          future: ClMainModel.of(context).isNightMode,
+          builder: (context, ssIsNightMode) {
+            if (ssIsNightMode.connectionState == ConnectionState.done) {
+              return FutureBuilder(
+                  future: ClMainModel.of(context).themeName,
+                  builder: (context, ssThemeName) {
+                    if (ssThemeName.connectionState == ConnectionState.done) {
+                      return MaterialApp(
+                          title: Strings.applicationName,
+                          theme: ssIsNightMode.data
+                              ? ThemeData.dark()
+                              : ThemeData(
+                                  primarySwatch:
+                                      materialColorInfo[ssThemeName.data]),
+                          home: Center(
+                            child: Icon(Icons.wifi),
+                          ));
+                    } else {
+                      return Center(child: CircularProgressIndicator());
+                    }
+                  });
+            } else {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+          },
         ));
   }
 }

@@ -6,6 +6,7 @@ import 'dart:async';
 import 'package:clreader/constents.dart';
 import 'package:clreader/book/book_info.dart';
 import 'package:clreader/book/book_shelf.dart';
+import 'package:clreader/book/book_src.dart';
 
 class BaseModel extends Model {
   Database _database;
@@ -33,6 +34,11 @@ class BaseModel extends Model {
             $columnBookShelfName text not null,
             $columnBookShelfBookIds text not null)
           ''');
+      await db.execute('''
+        create table $tableBookSrc (
+          $columnBookSrcId text primary key,
+          $columnBookSrcEnabled integer not null)
+      ''');
     });
   }
 
