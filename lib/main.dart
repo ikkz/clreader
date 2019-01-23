@@ -19,7 +19,9 @@ class ClReaderState extends State<ClReader> {
     return MaterialApp(
         title: Strings.applicationName,
         theme: ThemeData.light(),
-        home: BookShelfPage());
+        home: Center(
+          child: CircularProgressIndicator(),
+        ));
   }
 
   @override

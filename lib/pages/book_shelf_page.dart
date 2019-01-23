@@ -82,7 +82,10 @@ class _BookShelfPageState extends State<BookShelfPage> {
                           },
                         );
                       } else {
-                        return Center(child: CircularProgressIndicator());
+                        return IconButton(
+                          icon: Icon(Icons.arrow_drop_down),
+                          onPressed: () {},
+                        );
                       }
                     },
                   )

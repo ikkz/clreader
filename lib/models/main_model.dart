@@ -18,8 +18,8 @@ class ClMainModel extends BaseModel
 
   static Future<ClMainModel> _initMainModel() async {
     _instance = ClMainModel._();
-    await _instance.isNightMode;
-    await _instance.themeName;
+    await _instance.initIsNightMode();
+    await _instance.initThemeName();
 
     await _instance.insertBookShelf(BookShelf(name: "默认书架", bookIds: []));
     //test
