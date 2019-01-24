@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:cached_network_image/cached_network_image.dart';
 
 import 'package:clreader/models/main_model.dart';
 import 'package:clreader/book/book_info.dart';
 import 'package:clreader/pages/drawer_page.dart';
 import 'package:clreader/book/book_shelf.dart';
+import 'package:clreader/components/book_item.dart';
 
 class BookShelfPage extends StatefulWidget {
   @override
@@ -142,75 +142,8 @@ class _BookShelfPageState extends State<BookShelfPage> {
                               break;
                             }
                           }
-                          return Card(
-                            child: Row(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: <Widget>[
-                                Container(
-                                  padding: EdgeInsets.all(5),
-                                  height: 100,
-                                  width: 80,
-                                  alignment: Alignment.center,
-                                  child: CachedNetworkImage(
-                                    imageUrl: info.urlCover,
-                                    placeholder: CircularProgressIndicator(),
-                                    errorWidget: Icon(Icons.error),
-                                  ),
-                                ),
-                                Expanded(
-                                  flex: 1,
-                                  child: Padding(
-                                    padding: const EdgeInsets.all(8.0),
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.start,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.start,
-                                      children: <Widget>[
-                                        Text(
-                                          info.name,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .subhead,
-                                        ),
-                                        Row(
-                                          children: <Widget>[
-                                            CircleAvatar(
-                                              radius: 7,
-                                              backgroundColor: Colors.grey,
-                                              foregroundColor: Colors.white,
-                                              child: Icon(
-                                                Icons.person,
-                                                size: 14,
-                                              ),
-                                            ),
-                                            Container(
-                                              width: 5,
-                                            ),
-                                            Text(
-                                              info.author,
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .subtitle
-                                                  .copyWith(color: Colors.grey),
-                                            ),
-                                          ],
-                                        ),
-                                        Container(height: 5),
-                                        Text(
-                                          info.introduction,
-                                          maxLines: 3,
-                                          overflow: TextOverflow.ellipsis,
-                                          style: Theme.of(context)
-                                              .textTheme
-                                              .overline,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                )
-                              ],
-                            ),
+                          return BookItem(
+                            bookInfo: info,
                           );
                         },
                       );

@@ -20,15 +20,22 @@ class ClMainModel extends BaseModel
     _instance = ClMainModel._();
     await _instance.initIsNightMode();
     await _instance.initThemeName();
-
-    await _instance.insertBookShelf(BookShelf(name: "默认书架", bookIds: []));
     //test
-    await _instance.insertBook(testBookInfo);
-    await _instance.insertBookShelf(BookShelf(name: "bf1", bookIds: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]));
-    await _instance.insertBookShelf(BookShelf(name: "bf2", bookIds: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]));
-    await _instance.insertBookShelf(BookShelf(name: "bf3", bookIds: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]));
-    await _instance.insertBookShelf(BookShelf(name: "bf4", bookIds: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]));
-    await _instance.insertBookShelf(BookShelf(name: "bf5", bookIds: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]));
+    var books = await _instance.getBooks();
+    if(books.isEmpty){
+      await _instance.insertBook(testBookInfo);
+    }
+    var bookShelves = await _instance.getBookShelves();
+    if(bookShelves.isEmpty){
+      await _instance.insertBookShelf(BookShelf(name: "默认书架", bookIds: []));
+    }
+    if(bookShelves.length == 1){
+      await _instance.insertBookShelf(BookShelf(name: "bf1", bookIds: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]));
+      await _instance.insertBookShelf(BookShelf(name: "bf2", bookIds: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]));
+      await _instance.insertBookShelf(BookShelf(name: "bf3", bookIds: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]));
+      await _instance.insertBookShelf(BookShelf(name: "bf4", bookIds: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]));
+      await _instance.insertBookShelf(BookShelf(name: "bf5", bookIds: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]));
+    }
     return _instance;
   }
 

@@ -4,6 +4,7 @@ import 'package:url_launcher/url_launcher.dart';
 import 'package:clreader/models/main_model.dart';
 import 'package:clreader/constents.dart';
 import 'package:clreader/pages/help_author_page.dart';
+import 'package:clreader/pages/book_shelf_mgr_page.dart';
 
 class DrawerPage extends StatelessWidget {
   @override
@@ -42,7 +43,11 @@ class DrawerPage extends StatelessWidget {
             contentPadding: EdgeInsets.symmetric(horizontal: 16),
             leading: Icon(Icons.list),
             title: Text("书架管理"),
-            onTap: () {},
+            onTap: () {
+              Navigator.push(context, MaterialPageRoute(builder: (context) {
+                return BookShelfMgrPage();
+              }));
+            },
           ),
           ListTile(
             leading: Icon(Icons.search),
