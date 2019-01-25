@@ -4,6 +4,7 @@ import 'package:clreader/book/book_shelf.dart';
 import 'package:clreader/models/main_model.dart';
 import 'package:clreader/components/book_shelf_item.dart';
 import 'package:clreader/components/text_edit_dialog.dart';
+import 'package:clreader/constents.dart';
 
 class BookShelfMgrPage extends StatefulWidget {
   @override
@@ -56,23 +57,35 @@ class _BookShelfMgrPageState extends State<BookShelfMgrPage> {
               selected[i] = value;
             });
           },
-          onEdit: () {
-            showDialog<String>(
-                context: _thisContext,
-                builder: (context) {
-                  return TextEditDiaglog(
-                    title: "修改书架名称",
-                    defaultText: bookShelves[i].name,
-                  );
-                }).then((value) {
-              if (value != null) {
-                setState(() {
-                  bookShelves[i].name = value;
-                });
-                ClMainModel.of(_thisContext).updateBookShelf(bookShelves[i]);
-              }
-            });
-          },
+          onEdit: bookShelves[i].name != Strings.defaultBookShelf
+              ? () {
+                  showDialog<String>(
+                      context: _thisContext,
+                      builder: (context) {
+                        return TextEditDiaglog(
+                          title: "修改书架名称",
+                          defaultText: bookShelves[i].name,
+                        );
+                      }).then((value) {
+                    if (value != null) {
+                      setState(() {
+                        bookShelves[i].name = value;
+                      });
+                      ClMainModel.of(_thisContext)
+                          .updateBookShelf(bookShelves[i]);
+                    }
+                  });
+                }
+              : () {
+                  showDialog(
+                      context: _thisContext,
+                      builder: (context) {
+                        return AlertDialog(
+                          title: Text("提示"),
+                          content: Text("不允许修改默认书架的名称！"),
+                        );
+                      });
+                },
         );
       },
     );
