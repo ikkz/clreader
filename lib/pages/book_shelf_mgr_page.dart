@@ -15,8 +15,10 @@ class BookShelfMgrPage extends StatefulWidget {
 class _BookShelfMgrPageState extends State<BookShelfMgrPage> {
   List<BookShelf> bookShelves;
   List<bool> selected = [];
+  BuildContext _thisContext;
   @override
   Widget build(BuildContext context) {
+    _thisContext = context;
     return Scaffold(
       appBar: AppBar(
         title: Text("书架管理"),
@@ -56,7 +58,7 @@ class _BookShelfMgrPageState extends State<BookShelfMgrPage> {
           },
           onEdit: () {
             showDialog<String>(
-                context: context,
+                context: _thisContext,
                 builder: (context) {
                   return TextEditDiaglog(
                     title: "修改书架名称",
@@ -67,7 +69,7 @@ class _BookShelfMgrPageState extends State<BookShelfMgrPage> {
                 setState(() {
                   bookShelves[i].name = value;
                 });
-                ClMainModel.of(context).updateBookShelf(bookShelves[i]);
+                ClMainModel.of(_thisContext).updateBookShelf(bookShelves[i]);
               }
             });
           },
