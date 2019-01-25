@@ -6,7 +6,7 @@ import 'package:clreader/book/book_info.dart';
 
 class BookItem extends StatefulWidget {
   BookItem({@required this.bookInfo});
-  BookInfo bookInfo;
+  final BookInfo bookInfo;
   @override
   State<StatefulWidget> createState() {
     return _BookItemState();

@@ -7,6 +7,7 @@ import 'package:clreader/models/book_shelves_model.dart';
 import 'package:clreader/models/book_srcs_model.dart';
 import 'package:clreader/models/books_model.dart';
 import 'package:clreader/models/preference.dart';
+import 'package:clreader/constents.dart';
 
 //test
 import 'package:clreader/book/book_shelf.dart';
@@ -27,15 +28,11 @@ class ClMainModel extends BaseModel
     }
     var bookShelves = await _instance.getBookShelves();
     if(bookShelves.isEmpty){
-      await _instance.insertBookShelf(BookShelf(name: "默认书架", bookIds: []));
+      await _instance.insertBookShelf(BookShelf(name: Strings.defaultBookShelf, bookIds: []));
     }
     if(bookShelves.length == 1){
       await _instance.insertBookShelf(BookShelf(name: "bf1", bookIds: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]));
-      await _instance.insertBookShelf(BookShelf(name: "bf2", bookIds: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]));
-      await _instance.insertBookShelf(BookShelf(name: "bf3", bookIds: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]));
-      await _instance.insertBookShelf(BookShelf(name: "bf4", bookIds: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]));
-      await _instance.insertBookShelf(BookShelf(name: "bf5", bookIds: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]));
-    }
+      await _instance.insertBookShelf(BookShelf(name: "bf2", bookIds: [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]));}
     return _instance;
   }
 

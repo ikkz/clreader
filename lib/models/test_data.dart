@@ -1,5 +1,4 @@
 import 'package:clreader/book/book_info.dart';
-import 'package:clreader/book/book_src.dart';
 
 BookInfo testBookInfo = BookInfo(
   urlCover:

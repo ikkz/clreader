@@ -4,11 +4,10 @@ import 'package:meta/meta.dart';
 import 'package:clreader/book/book_shelf.dart';
 
 class BookShelfItem extends StatefulWidget {
-  BookShelf bookShelf;
-  bool selected;
-  ValueChanged<bool> onCheckboxChanged;
-  VoidCallback onEdit;
-  VoidCallback onDelete;
+  final BookShelf bookShelf;
+  final bool selected;
+  final ValueChanged<bool> onCheckboxChanged;
+  final VoidCallback onEdit;
 
   BookShelfItem(
       {@required this.bookShelf,

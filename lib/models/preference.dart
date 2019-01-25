@@ -24,7 +24,7 @@ class Preference extends BaseModel {
 
   Future<String> get selectedBookShelf async {
     final prefs = await SharedPreferences.getInstance();
-    return prefs.getString(prefSelectedBookShelf) ?? "默认书架";
+    return prefs.getString(prefSelectedBookShelf) ?? Strings.defaultBookShelf;
   }
 
   void setNightMode(bool isNightMode) async {

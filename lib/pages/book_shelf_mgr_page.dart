@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:clreader/book/book_shelf.dart';
 import 'package:clreader/models/main_model.dart';
 import 'package:clreader/components/book_shelf_item.dart';
+import 'package:clreader/components/text_edit_dialog.dart';
 
 class BookShelfMgrPage extends StatefulWidget {
   @override
@@ -54,7 +55,21 @@ class _BookShelfMgrPageState extends State<BookShelfMgrPage> {
             });
           },
           onEdit: () {
-            //TODO: onEdit
+            showDialog<String>(
+                context: context,
+                builder: (context) {
+                  return TextEditDiaglog(
+                    title: "修改书架名称",
+                    defaultText: bookShelves[i].name,
+                  );
+                }).then((value) {
+              if (value != null) {
+                setState(() {
+                  bookShelves[i].name = value;
+                });
+                ClMainModel.of(context).updateBookShelf(bookShelves[i]);
+              }
+            });
           },
         );
       },
