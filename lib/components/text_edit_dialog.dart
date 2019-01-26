@@ -28,9 +28,12 @@ class _TextEditDiaglogState extends State<TextEditDiaglog> {
       title: Text(widget.title),
       contentPadding: EdgeInsets.all(16.0),
       children: <Widget>[
-        TextField(
-          autofocus: true,
-          controller: _textEditingController,
+        Padding(
+          padding: const EdgeInsets.all(10),
+          child: TextField(
+            autofocus: true,
+            controller: _textEditingController,
+          ),
         ),
         Row(
           mainAxisAlignment: MainAxisAlignment.end,
