@@ -5,6 +5,7 @@ import 'package:clreader/book/book_info.dart';
 import 'package:clreader/pages/drawer_page.dart';
 import 'package:clreader/book/book_shelf.dart';
 import 'package:clreader/components/book_item.dart';
+import 'package:clreader/constents.dart';
 
 class BookShelfPage extends StatefulWidget {
   @override
@@ -24,7 +25,7 @@ class _BookShelfPageState extends State<BookShelfPage> {
               return Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  Text(ssSelectedBookShelf.data),
+                  Text(ssSelectedBookShelf.data ?? Strings.defaultBookShelf),
                   FutureBuilder(
                     future: mainModel.getBookShelves(),
                     builder: (context,
@@ -36,22 +37,21 @@ class _BookShelfPageState extends State<BookShelfPage> {
                           onPressed: () {
                             var options = <Widget>[];
                             ssBookShelves.data.forEach((BookShelf bookShelf) {
-                              options.add(SimpleDialogOption(
-                                  onPressed: () {
-                                    Navigator.pop(context);
-                                    mainModel
-                                        .setSelectedBookShelf(bookShelf.name);
-                                  },
-                                  child:
-                                      bookShelf.name == ssSelectedBookShelf.data
-                                          ? ListTile(
-                                              contentPadding: EdgeInsets.all(0),
-                                              title: Text(bookShelf.name),
-                                              trailing: Icon(Icons.check),
-                                            )
-                                          : ListTile(
-                                              contentPadding: EdgeInsets.all(0),
-                                              title: Text(bookShelf.name))));
+                              options.add(ListTile(
+                                contentPadding:
+                                    EdgeInsets.symmetric(horizontal: 20),
+                                title: Text(bookShelf.name),
+                                trailing: bookShelf.name ==
+                                        (ssSelectedBookShelf.data ??
+                                            Strings.defaultBookShelf)
+                                    ? Icon(Icons.check)
+                                    : null,
+                                onTap: () {
+                                  Navigator.pop(context);
+                                  mainModel
+                                      .setSelectedBookShelf(bookShelf.name);
+                                },
+                              ));
                             });
                             showDialog(
                                 context: context,
@@ -126,7 +126,9 @@ class _BookShelfPageState extends State<BookShelfPage> {
                         ConnectionState.done) {
                       BookShelf bookShelf;
                       for (var item in ssBookShelves.data) {
-                        if (item.name == ssSelectedBookShelf.data) {
+                        if (item.name ==
+                            (ssSelectedBookShelf.data ??
+                                Strings.defaultBookShelf)) {
                           bookShelf = item;
                           break;
                         }
