@@ -1,10 +1,13 @@
 import 'package:flutter/material.dart';
+import 'dart:async';
 
 import 'package:clreader/book/book_shelf.dart';
 import 'package:clreader/models/main_model.dart';
 import 'package:clreader/components/book_shelf_item.dart';
-import 'package:clreader/components/text_edit_dialog.dart';
+import 'package:clreader/components/simple_dialogs.dart';
 import 'package:clreader/constents.dart';
+
+enum MenuItemType { SELECT_ALL, INVERT, DELETE, ADD, COMBINE }
 
 class BookShelfMgrPage extends StatefulWidget {
   @override
@@ -23,6 +26,88 @@ class _BookShelfMgrPageState extends State<BookShelfMgrPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("书架管理"),
+        actions: <Widget>[
+          PopupMenuButton<MenuItemType>(
+            itemBuilder: (context) {
+              return <PopupMenuEntry<MenuItemType>>[
+                PopupMenuItem<MenuItemType>(
+                  value: MenuItemType.SELECT_ALL,
+                  child: Text("全选"),
+                ),
+                PopupMenuItem<MenuItemType>(
+                  value: MenuItemType.INVERT,
+                  child: Text("反选"),
+                ),
+                PopupMenuDivider(
+                  height: 10,
+                ),
+                PopupMenuItem<MenuItemType>(
+                  value: MenuItemType.ADD,
+                  child: Text("添加"),
+                ),
+                PopupMenuItem<MenuItemType>(
+                  value: MenuItemType.DELETE,
+                  child: Text("删除"),
+                ),
+                PopupMenuItem<MenuItemType>(
+                  value: MenuItemType.COMBINE,
+                  child: Text("合并"),
+                ),
+              ];
+            },
+            onSelected: (type) {
+              switch (type) {
+                case MenuItemType.SELECT_ALL:
+                  setState(() {
+                    for (int i = 0; i < selected.length; i++) {
+                      if (bookShelves[i].name != Strings.defaultBookShelf) {
+                        selected[i] = true;
+                      }
+                    }
+                  });
+                  break;
+                case MenuItemType.INVERT:
+                  setState(() {
+                    for (int i = 0; i < selected.length; i++) {
+                      if (bookShelves[i].name != Strings.defaultBookShelf) {
+                        selected[i] = !selected[i];
+                      }
+                    }
+                  });
+                  break;
+                case MenuItemType.ADD:
+                  SimpleDialogs.edit_text(
+                          context: _thisContext,
+                          title: "输入书架名称",
+                          defaultText: "")
+                      .then((value) {
+                    if (value != null) {
+                      if (value == Strings.defaultBookShelf) {
+                        _alertTautonymy();
+                        return;
+                      }
+                      var bookShelf = BookShelf();
+                      bookShelf.name = value;
+                      bookShelf.bookIds = [];
+                      ClMainModel.of(_thisContext)
+                          .insertBookShelf(bookShelf)
+                          .then((value) {
+                        _reload();
+                      });
+                    }
+                  });
+                  break;
+                case MenuItemType.DELETE:
+                  _deleteSelected();
+                  break;
+                case MenuItemType.COMBINE:
+                  _combineSelected();
+                  break;
+                default:
+              }
+            },
+          )
+        ],
       ),
       body: bookShelves == null
           ? FutureBuilder(
@@ -53,21 +138,27 @@ class _BookShelfMgrPageState extends State<BookShelfMgrPage> {
           selected: selected[i],
           bookShelf: bookShelves[i],
           onCheckboxChanged: (value) {
+            if (bookShelves[i].name == Strings.defaultBookShelf) {
+              SimpleDialogs.alert(
+                  context: _thisContext, title: "提示", content: "不允许选中默认书架！");
+              return;
+            }
             setState(() {
               selected[i] = value;
             });
           },
           onEdit: bookShelves[i].name != Strings.defaultBookShelf
               ? () {
-                  showDialog<String>(
-                      context: _thisContext,
-                      builder: (context) {
-                        return TextEditDiaglog(
-                          title: "修改书架名称",
-                          defaultText: bookShelves[i].name,
-                        );
-                      }).then((value) {
+                  SimpleDialogs.edit_text(
+                    context: _thisContext,
+                    title: "修改书架名称",
+                    defaultText: bookShelves[i].name,
+                  ).then((value) {
                     if (value != null) {
+                      if (value == Strings.defaultBookShelf) {
+                        _alertTautonymy();
+                        return;
+                      }
                       setState(() {
                         bookShelves[i].name = value;
                       });
@@ -77,17 +168,73 @@ class _BookShelfMgrPageState extends State<BookShelfMgrPage> {
                   });
                 }
               : () {
-                  showDialog(
+                  SimpleDialogs.alert(
                       context: _thisContext,
-                      builder: (context) {
-                        return AlertDialog(
-                          title: Text("提示"),
-                          content: Text("不允许修改默认书架的名称！"),
-                        );
-                      });
+                      title: "提示",
+                      content: "不允许修改默认书架的名称！");
                 },
         );
       },
     );
+  }
+
+  void _reload() {
+    setState(() {
+      bookShelves = null;
+      selected.clear();
+    });
+  }
+
+  void _deleteSelected() async {
+    for (int i = 0; i < selected.length; i++) {
+      if (selected[i]) {
+        await ClMainModel.of(context).deleteBookShelf(bookShelves[i].id);
+      }
+    }
+    _reload();
+    _checkSeletedBookShelf();
+    return;
+  }
+
+  void _combineSelected() async {
+    SimpleDialogs.edit_text(context: context, title: "输入新书架名称", defaultText: "")
+        .then((value) {
+      if (value == null || value.isEmpty) {
+        SimpleDialogs.alert(context: context, title: "提示", content: "不允许为空！");
+        return;
+      }
+      if (value == Strings.defaultBookShelf) {
+        _alertTautonymy();
+        return;
+      }
+      var bookShelf = BookShelf();
+      bookShelf.name = value;
+      bookShelf.bookIds = [];
+      for (int i = 0; i < selected.length; i++) {
+        if (selected[i]) {
+          bookShelf.bookIds.addAll(bookShelves[i].bookIds);
+        }
+      }
+      ClMainModel.of(context).insertBookShelf(bookShelf);
+      _deleteSelected();
+    });
+  }
+
+  void _alertTautonymy() {
+    SimpleDialogs.alert(context: context, title: "提示", content: "不允许与默认书架重名！");
+  }
+
+  void _checkSeletedBookShelf() async {
+    final bookShelves = await ClMainModel.of(context).getBookShelves();
+    final selected = await ClMainModel.of(context).selectedBookShelf;
+    bool found = false;
+    for (final item in bookShelves) {
+      if (item.name == selected) {
+        found = true;
+      }
+    }
+    if (!found) {
+      ClMainModel.of(context).setSelectedBookShelf(Strings.defaultBookShelf);
+    }
   }
 }

@@ -86,19 +86,18 @@ class DrawerPage extends StatelessWidget {
                       var themeColors = new List<Widget>();
                       materialColorInfo
                           .forEach((String colorName, MaterialColor color) {
-                        themeColors.add(SimpleDialogOption(
-                            onPressed: () {
-                              Navigator.pop(context);
-                              mainModel.setThemeName(colorName);
-                            },
-                            child: ListTile(
-                              contentPadding: EdgeInsets.all(0),
-                              title: Text(colorName),
-                              trailing: CircleAvatar(
-                                backgroundColor: color,
-                                radius: 15,
-                              ),
-                            )));
+                        themeColors.add(ListTile(
+                          contentPadding: EdgeInsets.symmetric(horizontal: 20),
+                          title: Text(colorName),
+                          trailing: CircleAvatar(
+                            backgroundColor: color,
+                            radius: 15,
+                          ),
+                          onTap: () {
+                            Navigator.pop(context);
+                            mainModel.setThemeName(colorName);
+                          },
+                        ));
                       });
                       return SimpleDialog(
                           titlePadding: EdgeInsets.all(0),
