@@ -82,8 +82,7 @@ class _BookShelfMgrPageState extends State<BookShelfMgrPage> {
                           defaultText: "")
                       .then((value) {
                     if (value != null) {
-                      if (value == Strings.defaultBookShelf) {
-                        _alertTautonymy();
+                      if (!_checkTautonymy(value)) {
                         return;
                       }
                       var bookShelf = BookShelf();
@@ -155,8 +154,7 @@ class _BookShelfMgrPageState extends State<BookShelfMgrPage> {
                     defaultText: bookShelves[i].name,
                   ).then((value) {
                     if (value != null) {
-                      if (value == Strings.defaultBookShelf) {
-                        _alertTautonymy();
+                      if (!_checkTautonymy(value)) {
                         return;
                       }
                       setState(() {
@@ -203,8 +201,7 @@ class _BookShelfMgrPageState extends State<BookShelfMgrPage> {
         SimpleDialogs.alert(context: context, title: "提示", content: "不允许为空！");
         return;
       }
-      if (value == Strings.defaultBookShelf) {
-        _alertTautonymy();
+      if (!_checkTautonymy(value)) {
         return;
       }
       var bookShelf = BookShelf();
@@ -220,8 +217,15 @@ class _BookShelfMgrPageState extends State<BookShelfMgrPage> {
     });
   }
 
-  void _alertTautonymy() {
-    SimpleDialogs.alert(context: context, title: "提示", content: "不允许与默认书架重名！");
+  bool _checkTautonymy(String name) {
+    for (final item in bookShelves) {
+      if (item.name == name) {
+        SimpleDialogs.alert(
+            context: context, title: "提示", content: "不允许与已有书架重名！");
+        return false;
+      }
+    }
+    return true;
   }
 
   void _checkSeletedBookShelf() async {
@@ -234,7 +238,8 @@ class _BookShelfMgrPageState extends State<BookShelfMgrPage> {
       }
     }
     if (!found) {
-      ClMainModel.of(context).setSelectedBookShelf(Strings.defaultBookShelf);
+      await ClMainModel.of(context)
+          .setSelectedBookShelf(Strings.defaultBookShelf);
     }
   }
 }
