@@ -15,7 +15,7 @@ class BookShelf {
   BookShelf.fromMap(Map<String, dynamic> map) {
     id = map[columnBookShelfId];
     name = map[columnBookShelfName];
-    var list = json.decode(map[columnBookShelfBookIds]);
+    final list = json.decode(map[columnBookShelfBookIds]);
     bookIds = [];
     list.forEach((dynamic i) {
       bookIds.add(i);

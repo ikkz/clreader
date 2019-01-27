@@ -1,4 +1,5 @@
 import 'package:meta/meta.dart';
+import 'dart:convert';
 
 final String tableBooks = "books";
 final String columnBookId = "_id";
@@ -7,6 +8,7 @@ final String columnBookAuthor = "author";
 final String columnBookCoverUrl = "urlCover";
 final String columnBookIntroduction = "introduction";
 final String cloumnBookSrc = "srcId";
+final String columnBookSrcsUrl = "srcsUrl";
 
 class BookInfo {
   int id;
@@ -15,6 +17,7 @@ class BookInfo {
   String name = "";
   String author = "";
   String introduction = "";
+  Map<String, String> srcsUrl;
 
   BookInfo(
       {this.id,
@@ -30,7 +33,11 @@ class BookInfo {
         author = map[columnBookAuthor],
         introduction = map[columnBookIntroduction],
         srcId = map[cloumnBookSrc],
-        id = map[columnBookId];
+        id = map[columnBookId] {
+    final su = json.decode(map[columnBookSrcsUrl]);
+    srcsUrl = {};
+    srcsUrl.addAll(su);
+  }
 
   Map<String, dynamic> toMap() {
     var map = <String, dynamic>{
@@ -38,7 +45,8 @@ class BookInfo {
       columnBookName: name,
       columnBookAuthor: author,
       columnBookIntroduction: introduction,
-      cloumnBookSrc: srcId
+      cloumnBookSrc: srcId,
+      columnBookSrcsUrl: json.encode(srcsUrl)
     };
     if (id != null) {
       map[columnBookId] = id;

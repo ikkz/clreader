@@ -45,4 +45,13 @@ class BookSrcsModel extends BaseModel {
           where: "$columnBookSrcId = ? ", whereArgs: [bookSrc.id]);
     }
   }
+
+  BookSrc getBookSrc(String id) {
+    for (var item in _bookSrcs) {
+      if (id == item.id) {
+        return item;
+      }
+    }
+    return null;
+  }
 }
