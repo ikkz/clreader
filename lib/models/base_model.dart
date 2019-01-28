@@ -26,7 +26,8 @@ class BaseModel extends Model {
             $columnBookAuthor text not null,
             $columnBookCoverUrl text not null,
             $columnBookIntroduction text not null,
-            $cloumnBookSrc text not null)
+            $cloumnBookSrc text not null,
+            $columnBookSrcsUrl text not null)
           ''');
       await db.execute('''
           create table $tableBookShelves (

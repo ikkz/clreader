@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:clreader/book/book_info.dart';
+import 'package:clreader/book/chapter.dart';
 
 final String tableBookSrc = "bookSrcs";
 final String columnBookSrcId = "_id";
@@ -14,8 +15,18 @@ class BookSrc {
 
   String get id => _id;
   String get name => _name;
+  set id(String id) => _id = id;
+  set name(String name) => _name = name;
 
   Future<List<BookInfo>> search({String name, String author}) async {
+    return null;
+  }
+
+  Future<List<Chapter>> getChapters(String bookUrl) async {
+    return null;
+  }
+
+  Future<String> getContent(String contentUrl) async {
     return null;
   }
 

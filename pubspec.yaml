@@ -16,6 +16,8 @@ dependencies:
   shared_preferences: ^0.4.3
   cached_network_image: ^0.5.1
   sqflite: ^1.0.0
+  dio: ^1.0.14
+  html: any
 
 dev_dependencies:
   flutter_test:

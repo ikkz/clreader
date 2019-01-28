@@ -17,7 +17,7 @@ class BookInfo {
   String name = "";
   String author = "";
   String introduction = "";
-  Map<String, String> srcsUrl;
+  Map<String, String> srcsUrl = {};
 
   BookInfo(
       {this.id,
@@ -35,8 +35,9 @@ class BookInfo {
         srcId = map[cloumnBookSrc],
         id = map[columnBookId] {
     final su = json.decode(map[columnBookSrcsUrl]);
-    srcsUrl = {};
-    srcsUrl.addAll(su);
+    su.forEach((key, value) {
+      srcsUrl[key] = value;
+    });
   }
 
   Map<String, dynamic> toMap() {

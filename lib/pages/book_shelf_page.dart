@@ -7,6 +7,8 @@ import 'package:clreader/book/book_shelf.dart';
 import 'package:clreader/components/book_item.dart';
 import 'package:clreader/constents.dart';
 
+import 'package:clreader/book/book_src/www.snwx8.com.dart';
+
 class BookShelfPage extends StatefulWidget {
   @override
   _BookShelfPageState createState() {
@@ -100,7 +102,10 @@ class _BookShelfPageState extends State<BookShelfPage> {
           padding: EdgeInsets.symmetric(horizontal: 20.0),
           child: IconButton(
             icon: Icon(Icons.search),
-            onPressed: () {},
+            onPressed: () {
+              Snwx8 snwx8 = Snwx8();
+              snwx8.search(name: "龙王传说");
+            },
           ),
         ),
       ],
