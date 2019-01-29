@@ -3,6 +3,7 @@ import 'package:dio/dio.dart';
 import 'package:html/parser.dart';
 import 'package:html/dom.dart';
 import 'dart:convert';
+import 'package:gbk2utf8/gbk2utf8.dart';
 
 import 'package:clreader/book/book_src.dart';
 import 'package:clreader/book/book_info.dart';
@@ -23,18 +24,13 @@ class Snwx8 extends BookSrc {
 
   @override
   Future<List<BookInfo>> search({String name, String author}) async {
-    final String p = name ?? author;
-    var u8 = latin1.encode(p);
-    String key = "";
-    for (var i in u8) {
-      key += ('%' + i.toRadixString(16));
-    }
-    print(key);
+    final p = name ?? author;
+    print(p.codeUnits);
+    final key = decodeGbk(p.codeUnits);
     final respose =
         await dio.get("/modules/article/search.php", data: {"searchkey": key});
     final document = parse(respose.data.toString());
     final ele = document.querySelector("#newscontent");
-    print(ele.innerHtml);
   }
 
   @override
