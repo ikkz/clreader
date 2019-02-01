@@ -14,7 +14,7 @@ dependencies:
   scoped_model: ^1.0.1
   clipboard_manager: ^0.0.4
   shared_preferences: ^0.4.3
-  cached_network_image: ^0.5.1
+  flutter_advanced_networkimage: any
   sqflite: ^1.0.0
   dio: ^1.0.14
   html: any
