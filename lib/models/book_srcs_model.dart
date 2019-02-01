@@ -3,6 +3,9 @@ import 'dart:async';
 import 'package:clreader/book/book_src.dart';
 import 'package:clreader/models/base_model.dart';
 
+//srcs
+import 'package:clreader/book/book_src/www.snwx8.com.dart';
+
 class BookSrcsModel extends BaseModel {
   List<BookSrc> _bookSrcs;
 
@@ -10,8 +13,9 @@ class BookSrcsModel extends BaseModel {
 
   Future<List<BookSrc>> init() async {
     final db = await database;
-    List<BookSrc> config = (await db.query(tableBookSrc)).map((Map map) {
-      return BookSrc.fromMap(map);
+    List<BookSrc> config = [];
+    (await db.query(tableBookSrc)).forEach((map) {
+      config.add(BookSrc.fromMap(map));
     });
     Map<String, bool> configs = {};
     for (var item in config) {
@@ -29,6 +33,8 @@ class BookSrcsModel extends BaseModel {
   List<BookSrc> _initBookSrcList() {
     List<BookSrc> srcs = [];
     //to add subtype of BookSrc here
+    srcs.add(Snwx8());
+
     return srcs;
   }
 

@@ -21,11 +21,11 @@ class BookInfo {
 
   BookInfo(
       {this.id,
-      @required this.urlCover,
-      @required this.name,
-      @required this.author,
-      @required this.introduction,
-      @required this.srcId});
+      this.urlCover,
+      this.name,
+      this.author,
+      this.introduction,
+      this.srcId});
 
   BookInfo.fromMap(Map<String, dynamic> map)
       : urlCover = map[columnBookCoverUrl],
