@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:clreader/book/book_info.dart';
 import 'package:clreader/components/book_item.dart';
 import 'package:clreader/models/main_model.dart';
+import 'package:clreader/pages/book_detail_page.dart';
 
 class SearchPage extends StatefulWidget {
   @override
@@ -30,7 +31,6 @@ class _SearchPageState extends State<SearchPage> {
             if (mounted) {
               setState(() {
                 _books.add(info);
-                print(info.name);
               });
             }
           });
@@ -61,8 +61,17 @@ class _SearchPageState extends State<SearchPage> {
       body: ListView.builder(
         itemCount: _books.length,
         itemBuilder: (context, i) {
-          return BookItem(
-            bookInfo: _books[i],
+          return GestureDetector(
+            child: BookItem(
+              bookInfo: _books[i],
+            ),
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return BookDetailPage(
+                  bookInfo: _books[i],
+                );
+              }));
+            },
           );
         },
       ),

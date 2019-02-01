@@ -7,6 +7,7 @@ import 'package:clreader/book/book_shelf.dart';
 import 'package:clreader/components/book_item.dart';
 import 'package:clreader/constents.dart';
 import 'package:clreader/pages/serach_page.dart';
+import 'package:clreader/pages/book_detail_page.dart';
 
 class BookShelfPage extends StatefulWidget {
   @override
@@ -149,8 +150,18 @@ class _BookShelfPageState extends State<BookShelfPage> {
                               break;
                             }
                           }
-                          return BookItem(
-                            bookInfo: info,
+                          return GestureDetector(
+                            child: BookItem(
+                              bookInfo: info,
+                            ),
+                            onTap: () {
+                              Navigator.of(context)
+                                  .push(MaterialPageRoute(builder: (context) {
+                                return BookDetailPage(
+                                  bookInfo: info,
+                                );
+                              }));
+                            },
                           );
                         },
                       );

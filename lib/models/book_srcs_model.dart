@@ -9,7 +9,8 @@ import 'package:clreader/book/book_src/www.snwx8.com.dart';
 class BookSrcsModel extends BaseModel {
   List<BookSrc> _bookSrcs;
 
-  Future<List<BookSrc>> get bookSrcs async => _bookSrcs ?? await init();
+  Future<List<BookSrc>> get bookSrcs async =>
+      _bookSrcs ?? (_bookSrcs = await init());
 
   Future<List<BookSrc>> init() async {
     final db = await database;

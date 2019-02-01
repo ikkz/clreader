@@ -26,6 +26,7 @@ class BaseModel extends Model {
             $columnBookAuthor text not null,
             $columnBookCoverUrl text not null,
             $columnBookIntroduction text not null,
+            $columnBookCurChapter integer not null,
             $cloumnBookSrc text not null,
             $columnBookSrcsUrl text not null)
           ''');

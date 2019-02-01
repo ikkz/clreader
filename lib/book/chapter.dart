@@ -1,7 +1,5 @@
-import 'package:meta/meta.dart';
-
 final String columnChapterId = "_id";
-final String columnChapterIndex = "index";
+final String columnChapterIndex = "_index";
 final String columnChapterName = "name";
 final String columnChapterUrl = "url";
 final String columnChapterContent = "content";
@@ -13,12 +11,7 @@ class Chapter {
   String url = "";
   String content = "";
 
-  Chapter(
-      {this.id,
-      @required this.index,
-      @required this.name,
-      @required this.url,
-      @required this.content});
+  Chapter({this.id, this.index, this.name, this.url, this.content});
 
   Chapter.formMap(Map<String, dynamic> map)
       : id = map[columnChapterId],

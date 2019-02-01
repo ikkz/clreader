@@ -7,20 +7,14 @@ import 'package:clreader/book/chapter.dart';
 class ChapterMgr extends BaseModel {
   Future<void> createChapters(BookInfo bookInfo) async {
     final db = await database;
-    final table = await db.query(bookInfo.name);
-    if (table != null) {
-      return;
-    } else {
-      await db.execute('''
-        create table ${bookInfo.name} (
+    await db.execute('''
+        create table if not exists ${bookInfo.name} (
           $columnChapterId integer primary key autoincrement,
           $columnChapterIndex integer not null,
           $columnChapterUrl text not null,
           $columnChapterName text not null,
           $columnChapterContent text not null)
       ''');
-      return;
-    }
   }
 
   Future<List<Chapter>> getChapters(BookInfo bookInfo) async {
@@ -40,6 +34,13 @@ class ChapterMgr extends BaseModel {
         .delete(bookInfo.name, where: "$columnChapterId = ?", whereArgs: [id]);
   }
 
+  Future<void> addChapters(BookInfo bookInfo, List<Chapter> chapters) async {
+    final db = await database;
+    for (var item in chapters) {
+      await db.insert(bookInfo.name, item.toMap());
+    }
+  }
+
   Future<int> updateChapter(BookInfo bookInfo, Chapter chapter) async {
     final db = await database;
     return await db.update(bookInfo.name, chapter.toMap(),
@@ -47,11 +48,7 @@ class ChapterMgr extends BaseModel {
   }
 
   Future<void> clearChapters(BookInfo bookInfo) async {
-    final cs = await getChapters(bookInfo);
-    if (cs != null) {
-      for (var item in cs) {
-        await deleteChapter(bookInfo, item.id);
-      }
-    }
+    final db = await database;
+    await db.delete(bookInfo.name);
   }
 }

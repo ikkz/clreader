@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'dart:async';
 
 import 'package:clreader/book/book_shelf.dart';
 import 'package:clreader/models/main_model.dart';

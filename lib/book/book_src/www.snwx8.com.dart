@@ -3,6 +3,7 @@ import 'package:html/parser.dart';
 import 'package:http/http.dart' as http;
 import 'package:gbk2utf8/gbk2utf8.dart';
 
+import 'package:clreader/util.dart' as util;
 import 'package:clreader/book/book_src.dart';
 import 'package:clreader/book/book_info.dart';
 import 'package:clreader/book/chapter.dart';
@@ -27,6 +28,7 @@ class Snwx8 extends BookSrc {
       BookInfo info = BookInfo();
       final s2a = li.querySelector("span.s2 > a");
       info.name = decodeGbk(s2a.text.codeUnits);
+      info.srcId = this.id;
       info.srcsUrl[this.id] = s2a.attributes["href"];
 
       final s4a = li.querySelector("span.s4 > a");
@@ -36,13 +38,14 @@ class Snwx8 extends BookSrc {
       if (pageRes != null) {
         final pageDoc = parse(pageRes.body);
         final img = pageDoc.querySelector("#fmimg > img");
+        print(img.attributes["src"]);
         info.urlCover =
             img.attributes["src"] == "/modules/article/images/nocover.jpg"
                 ? "https://www.snwx8.com/modules/article/images/nocover.jpg"
                 : img.attributes["src"];
         final intro = pageDoc.querySelector("#info > div.intro");
-        info.introduction = decodeGbk(intro.innerHtml.codeUnits)
-            .replaceAll(RegExp("<[^>]+>"), "");
+        info.introduction =
+            util.removeHtmlTag(decodeGbk(intro.innerHtml.codeUnits));
         info.introduction = info.introduction
             .substring(info.introduction.indexOf(RegExp("简介")) + 3);
       }
@@ -55,11 +58,35 @@ class Snwx8 extends BookSrc {
 
   @override
   Future<List<Chapter>> getChapters(String bookUrl) async {
-    return null;
+    List<Chapter> chapters = [];
+
+    final doc = parse((await http.get(bookUrl)).body);
+    final url = doc.querySelector("#fmimg > p > a").attributes["href"];
+    final response = await http.get("https://www.snwx8.com${url}");
+    final document = parse(response.body);
+    var li = document.querySelector("#Chapters > ul > li");
+    int index = 1;
+    while (li != null) {
+      Chapter chapter = Chapter();
+      final a = parse(li.innerHtml).querySelector("a");
+      chapter.index = index++;
+      chapter.url = a.attributes["href"];
+      chapter.name = decodeGbk(a.text.codeUnits);
+      chapters.add(chapter);
+      li = li.nextElementSibling;
+    }
+    return chapters;
   }
 
   @override
   Future<String> getContent(String contentUrl) async {
-    return null;
+    try {
+      final doc = parse((await http.get(contentUrl)).body);
+      final content = doc.querySelector("#BookText");
+      return util
+          .removeNbsp(util.removeHtmlTag(decodeGbk(content.text.codeUnits)));
+    } catch (e) {
+      return "";
+    }
   }
 }

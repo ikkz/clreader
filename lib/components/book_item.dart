@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_advanced_networkimage/provider.dart';
-import 'package:flutter_advanced_networkimage/transition.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:meta/meta.dart';
 
 import 'package:clreader/book/book_info.dart';
@@ -26,15 +25,14 @@ class _BookItemState extends State<BookItem> {
               height: 100,
               width: 80,
               alignment: Alignment.center,
-              child: TransitionToImage(
-                image: AdvancedNetworkImage(
-                  widget.bookInfo.urlCover,
+              child: CachedNetworkImage(
+                imageUrl: widget.bookInfo.urlCover,
+                placeholder: Center(
+                  child: CircularProgressIndicator(),
                 ),
-                loadingWidgetBuilder: (double progress) =>
-                    CircularProgressIndicator(),
-                fit: BoxFit.contain,
-                placeholder: const Icon(Icons.refresh),
-                enableRefresh: true,
+                errorWidget: Center(
+                  child: Icon(Icons.error),
+                ),
               )),
           Expanded(
             flex: 1,

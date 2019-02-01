@@ -1,4 +1,3 @@
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 final String tableBooks = "books";
@@ -7,6 +6,7 @@ final String columnBookName = "name";
 final String columnBookAuthor = "author";
 final String columnBookCoverUrl = "urlCover";
 final String columnBookIntroduction = "introduction";
+final String columnBookCurChapter = "curChapter";
 final String cloumnBookSrc = "srcId";
 final String columnBookSrcsUrl = "srcsUrl";
 
@@ -17,6 +17,7 @@ class BookInfo {
   String name = "";
   String author = "";
   String introduction = "";
+  int curChapter = 1;
   Map<String, String> srcsUrl = {};
 
   BookInfo(
@@ -25,6 +26,7 @@ class BookInfo {
       this.name,
       this.author,
       this.introduction,
+      this.curChapter,
       this.srcId});
 
   BookInfo.fromMap(Map<String, dynamic> map)
@@ -32,6 +34,7 @@ class BookInfo {
         name = map[columnBookName],
         author = map[columnBookAuthor],
         introduction = map[columnBookIntroduction],
+        curChapter = map[columnBookCurChapter],
         srcId = map[cloumnBookSrc],
         id = map[columnBookId] {
     final su = json.decode(map[columnBookSrcsUrl]);
@@ -46,6 +49,7 @@ class BookInfo {
       columnBookName: name,
       columnBookAuthor: author,
       columnBookIntroduction: introduction,
+      columnBookCurChapter: curChapter,
       cloumnBookSrc: srcId,
       columnBookSrcsUrl: json.encode(srcsUrl)
     };

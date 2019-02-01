@@ -15,6 +15,7 @@ dependencies:
   clipboard_manager: ^0.0.4
   shared_preferences: ^0.4.3
   flutter_advanced_networkimage: any
+  cached_network_image: ^0.5.1
   sqflite: ^1.0.0
   dio: ^1.0.14
   html: any
