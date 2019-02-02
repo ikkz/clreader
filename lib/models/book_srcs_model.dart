@@ -9,10 +9,9 @@ import 'package:clreader/book/book_src/www.snwx8.com.dart';
 class BookSrcsModel extends BaseModel {
   List<BookSrc> _bookSrcs;
 
-  Future<List<BookSrc>> get bookSrcs async =>
-      _bookSrcs ?? (_bookSrcs = await init());
+  Future<List<BookSrc>> get bookSrcs async => _bookSrcs ?? await initBookSrcModel();
 
-  Future<List<BookSrc>> init() async {
+  Future<List<BookSrc>> initBookSrcModel() async {
     final db = await database;
     List<BookSrc> config = [];
     (await db.query(tableBookSrc)).forEach((map) {
@@ -28,6 +27,7 @@ class BookSrcsModel extends BaseModel {
         item.enabled = configs[item.id];
       }
     }
+    _bookSrcs = srcs;
     return srcs;
   }
 

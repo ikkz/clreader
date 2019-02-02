@@ -13,26 +13,34 @@ class SearchPage extends StatefulWidget {
 class _SearchPageState extends State<SearchPage> {
   List<BookInfo> _books = [];
   String _searchText = "";
+  int searchId = 0;
+  bool showCpi = false;
 
   void _search() async {
     if (_searchText.isEmpty) {
       return;
     }
-    print("text:$_searchText");
     if (mounted) {
       setState(() {
         _books.clear();
+        showCpi = true;
       });
+    } else {
+      return;
     }
+    searchId++;
     (await ClMainModel.of(context).bookSrcs).forEach((src) {
       src.search(
           name: _searchText,
-          callback: (info) {
-            if (mounted) {
-              setState(() {
-                _books.add(info);
-              });
+          searchId: searchId,
+          callback: (info, id) {
+            if (id != this.searchId || (!mounted)) {
+              return false;
             }
+            setState(() {
+              _books.add(info);
+            });
+            return true;
           });
     });
   }
@@ -42,14 +50,13 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: AppBar(
         title: TextField(
-          textInputAction: TextInputAction.search,
           onChanged: (text) {
             _searchText = text;
           },
         ),
         actions: <Widget>[
           Padding(
-              padding: EdgeInsets.symmetric(horizontal: 20.0),
+              padding: EdgeInsets.only(right: 20),
               child: IconButton(
                 icon: Icon(Icons.search),
                 onPressed: () {

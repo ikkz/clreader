@@ -17,7 +17,7 @@ class Snwx8 extends BookSrc {
 
   @override
   Future<void> search(
-      {String name, String author, BookCallback callback}) async {
+      {String name, String author, int searchId, BookCallback callback}) async {
     final key = await gbk_urlencode(name ?? author);
     final respose = await http
         .get("https://www.snwx8.com/modules/article/search.php?searchkey=$key");
@@ -38,11 +38,13 @@ class Snwx8 extends BookSrc {
       if (pageRes != null) {
         final pageDoc = parse(pageRes.body);
         final img = pageDoc.querySelector("#fmimg > img");
-        print(img.attributes["src"]);
-        info.urlCover =
-            img.attributes["src"] == "/modules/article/images/nocover.jpg"
-                ? "https://www.snwx8.com/modules/article/images/nocover.jpg"
-                : img.attributes["src"];
+        //"https://www.snwx8.com/modules/article/images/nocover.jpg"
+        info.urlCover = img.attributes["src"];
+        final imgResp = await http.get(info.urlCover);
+        if (imgResp.statusCode == 404) {
+          info.urlCover =
+              "https://www.snwx8.com/modules/article/images/nocover.jpg";
+        }
         final intro = pageDoc.querySelector("#info > div.intro");
         info.introduction =
             util.removeHtmlTag(decodeGbk(intro.innerHtml.codeUnits));
@@ -50,7 +52,9 @@ class Snwx8 extends BookSrc {
             .substring(info.introduction.indexOf(RegExp("简介")) + 3);
       }
       if (callback != null) {
-        callback(info);
+        if (!callback(info, searchId)) {
+          return;
+        }
       }
       li = li.nextElementSibling;
     }
@@ -72,6 +76,7 @@ class Snwx8 extends BookSrc {
       chapter.index = index++;
       chapter.url = a.attributes["href"];
       chapter.name = decodeGbk(a.text.codeUnits);
+      chapter.content = "";
       chapters.add(chapter);
       li = li.nextElementSibling;
     }
@@ -84,7 +89,8 @@ class Snwx8 extends BookSrc {
       final doc = parse((await http.get(contentUrl)).body);
       final content = doc.querySelector("#BookText");
       return util
-          .removeNbsp(util.removeHtmlTag(decodeGbk(content.text.codeUnits)));
+          .removeNbsp(util.removeHtmlTag(decodeGbk(content.text.codeUnits)))
+          .replaceAll(RegExp("牋"), "");
     } catch (e) {
       return "";
     }

@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:clreader/book/book_info.dart';
 import 'package:clreader/book/chapter.dart';
 
-typedef BookCallback = void Function(BookInfo);
+typedef BookCallback = bool Function(BookInfo, int);
 
 final String tableBookSrc = "bookSrcs";
 final String columnBookSrcId = "_id";
@@ -21,7 +21,7 @@ class BookSrc {
   set name(String name) => _name = name;
 
   Future<void> search(
-      {String name, String author, BookCallback callback}) async {
+      {String name, String author, int searchId, BookCallback callback}) async {
     return null;
   }
 

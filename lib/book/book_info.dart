@@ -26,7 +26,7 @@ class BookInfo {
       this.name,
       this.author,
       this.introduction,
-      this.curChapter,
+      this.curChapter = 1,
       this.srcId});
 
   BookInfo.fromMap(Map<String, dynamic> map)

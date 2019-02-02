@@ -25,6 +25,7 @@ class ClMainModel extends BaseModel
       await _instance.insertBookShelf(
           BookShelf(name: Strings.defaultBookShelf, bookIds: []));
     }
+    await _instance.initBookSrcModel();
     return _instance;
   }
 
