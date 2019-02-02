@@ -53,6 +53,7 @@ class _ReadPageState extends State<ReadPage> {
             onPressed: () {
               setState(() {
                 chapter--;
+                _chapterChanged();
               });
             },
           ),
@@ -61,6 +62,7 @@ class _ReadPageState extends State<ReadPage> {
             onPressed: () {
               setState(() {
                 chapter++;
+                _chapterChanged();
               });
             },
           )
@@ -84,6 +86,7 @@ class _ReadPageState extends State<ReadPage> {
                 setState(() {
                   chapter = i + 1;
                 });
+                _chapterChanged();
                 Navigator.of(context).pop();
               },
             );
@@ -124,5 +127,11 @@ class _ReadPageState extends State<ReadPage> {
         ),
       ),
     );
+  }
+
+  void _chapterChanged() {
+    final mainModel = ClMainModel.of(context);
+    widget.bookInfo.curChapter = chapter;
+    mainModel.updateBook(widget.bookInfo);
   }
 }
