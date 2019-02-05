@@ -89,7 +89,7 @@ class Snwx8 extends BookSrc {
       final doc = parse((await http.get(contentUrl)).body);
       final content = doc.querySelector("#BookText");
       return util
-          .removeNbsp(util.removeHtmlTag(decodeGbk(content.text.codeUnits)))
+          .removeHtmlTag(decodeGbk(content.innerHtml.codeUnits))
           .replaceAll(RegExp("牋"), "");
     } catch (e) {
       return "";

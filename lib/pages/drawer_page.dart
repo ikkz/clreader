@@ -5,6 +5,7 @@ import 'package:clreader/models/main_model.dart';
 import 'package:clreader/constents.dart';
 import 'package:clreader/pages/help_author_page.dart';
 import 'package:clreader/pages/book_shelf_mgr_page.dart';
+import 'package:clreader/pages/book_src_mgr_page.dart';
 
 class DrawerPage extends StatelessWidget {
   @override
@@ -52,7 +53,11 @@ class DrawerPage extends StatelessWidget {
           ListTile(
             leading: Icon(Icons.search),
             title: Text("搜索设置"),
-            onTap: () {},
+            onTap: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return BookSrcMgrPage();
+              }));
+            },
           ),
           ListTile(
             leading: Icon(Icons.wb_sunny),
