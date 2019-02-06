@@ -10,10 +10,12 @@ class BookShelfItem extends StatefulWidget {
   final VoidCallback onEdit;
 
   BookShelfItem(
-      {@required this.bookShelf,
+      {Key key,
+      @required this.bookShelf,
       @required this.selected,
       @required this.onCheckboxChanged,
-      @required this.onEdit});
+      @required this.onEdit})
+      : super(key: key);
 
   @override
   _BookShelfItemState createState() => _BookShelfItemState();

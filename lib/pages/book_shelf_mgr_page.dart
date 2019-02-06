@@ -18,6 +18,8 @@ class BookShelfMgrPage extends StatefulWidget {
 class _BookShelfMgrPageState extends State<BookShelfMgrPage> {
   List<BookShelf> bookShelves;
   List<bool> selected = [];
+  var items = <Widget>[];
+
   BuildContext _thisContext;
   @override
   Widget build(BuildContext context) {
@@ -129,22 +131,20 @@ class _BookShelfMgrPageState extends State<BookShelfMgrPage> {
   }
 
   Widget _buildList(BuildContext context) {
-    return ListView.builder(
-      itemCount: selected.length,
-      itemBuilder: (context, i) {
-        return BookShelfItem(
+    if (items.isEmpty) {
+      for (var i = 0; i < bookShelves.length; i++) {
+        items.add(BookShelfItem(
+          key: Key(bookShelves[i].name),
           selected: selected[i],
           bookShelf: bookShelves[i],
-          onCheckboxChanged: (value) {
-            if (bookShelves[i].name == Strings.defaultBookShelf) {
-              SimpleDialogs.alert(
-                  context: _thisContext, title: "提示", content: "不允许选中默认书架！");
-              return;
-            }
-            setState(() {
-              selected[i] = value;
-            });
-          },
+          onCheckboxChanged: bookShelves[i].name == Strings.defaultBookShelf
+              ? null
+              : (value) {
+                  setState(() {
+                    selected[i] = value;
+                    print(value);
+                  });
+                },
           onEdit: bookShelves[i].name != Strings.defaultBookShelf
               ? () {
                   SimpleDialogs.edit_text(
@@ -170,9 +170,29 @@ class _BookShelfMgrPageState extends State<BookShelfMgrPage> {
                       title: "提示",
                       content: "不允许修改默认书架的名称！");
                 },
-        );
-      },
+        ));
+      }
+    }
+    return ReorderableListView(
+      children: items,
+      onReorder: _onReorder,
     );
+  }
+
+  void _onReorder(int oldIndex, int newIndex) {
+    if (newIndex > oldIndex) {
+      newIndex -= 1;
+    }
+    int id = bookShelves[oldIndex].id;
+    bookShelves[oldIndex].id = bookShelves[newIndex].id;
+    bookShelves[newIndex].id = id;
+    final mainModel = ClMainModel.of(context);
+    mainModel.updateBookShelf(bookShelves[oldIndex]);
+    mainModel.updateBookShelf(bookShelves[newIndex]);
+    setState(() {
+      final item = items.removeAt(oldIndex);
+      items.insert(newIndex, item);
+    });
   }
 
   void _reload() {

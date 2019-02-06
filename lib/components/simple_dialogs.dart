@@ -13,8 +13,20 @@ class SimpleDialogs {
         builder: (context) {
           return AlertDialog(
             title: Text(title),
-            content: Text(content),
-            contentPadding: EdgeInsets.all(30),
+            content: Text(
+              content,
+              style: Theme.of(context)
+                  .textTheme
+                  .subhead
+                  .copyWith(color: Theme.of(context).textTheme.caption.color),
+            ),
+            actions: <Widget>[
+              FlatButton(
+                  child: Text("确认"),
+                  onPressed: () {
+                    Navigator.of(context).pop();
+                  })
+            ],
           );
         });
   }
