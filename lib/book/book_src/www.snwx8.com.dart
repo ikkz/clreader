@@ -17,7 +17,7 @@ class Snwx8 extends BookSrc {
 
   @override
   Future<void> search(
-      {String name, String author, int searchId, BookCallback callback}) async {
+      {String name, String author, BookCallback callback}) async {
     final key = await gbk_urlencode(name ?? author);
     final respose = await http
         .get("https://www.snwx8.com/modules/article/search.php?searchkey=$key");
@@ -49,10 +49,10 @@ class Snwx8 extends BookSrc {
         info.introduction =
             util.removeHtmlTag(decodeGbk(intro.innerHtml.codeUnits));
         info.introduction = info.introduction
-            .substring(info.introduction.indexOf(RegExp("简介")) + 3);
+            .substring(info.introduction.indexOf(RegExp("简介")) + 4);
       }
       if (callback != null) {
-        if (!callback(info, searchId)) {
+        if (!callback(info)) {
           return;
         }
       }

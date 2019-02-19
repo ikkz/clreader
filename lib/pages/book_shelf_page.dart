@@ -6,9 +6,11 @@ import 'package:clreader/pages/drawer_page.dart';
 import 'package:clreader/book/book_shelf.dart';
 import 'package:clreader/components/book_item.dart';
 import 'package:clreader/constents.dart';
+import 'package:clreader/components/search_dialog.dart';
 import 'package:clreader/pages/serach_page.dart';
 import 'package:clreader/pages/book_detail_page.dart';
 import 'package:clreader/pages/read_page.dart';
+import 'package:clreader/components/simple_dialogs.dart';
 
 class BookShelfPage extends StatefulWidget {
   @override
@@ -60,26 +62,7 @@ class _BookShelfPageState extends State<BookShelfPage> {
                                 context: context,
                                 builder: (BuildContext context) {
                                   return SimpleDialog(
-                                      titlePadding: EdgeInsets.all(0),
-                                      title: Column(
-                                        crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                        children: <Widget>[
-                                          Padding(
-                                            padding: EdgeInsets.all(15),
-                                            child: Text(
-                                              "请选择书架",
-                                              style: Theme.of(context)
-                                                  .textTheme
-                                                  .title,
-                                            ),
-                                          ),
-                                          Divider(
-                                            height: 1,
-                                            color: Colors.grey,
-                                          )
-                                        ],
-                                      ),
+                                      title: const Text("请选择书架"),
                                       children: options);
                                 });
                           },
@@ -104,9 +87,29 @@ class _BookShelfPageState extends State<BookShelfPage> {
           child: IconButton(
             icon: Icon(Icons.search),
             onPressed: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return SearchPage();
-              }));
+              // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              //   return SearchPage();
+              // }));
+              showDialog(
+                  context: context,
+                  builder: (context) {
+                    return SearchDialog();
+                  }).then((value) {
+                if (value == null) {
+                  return;
+                }
+                if (value["searchText"].isEmpty) {
+                  SimpleDialogs.alert(context: context, content: "请输入内容！");
+                  return;
+                }
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (context) {
+                  return SearchPage(
+                    searchText: value["searchText"],
+                    name: value["name"],
+                  );
+                }));
+              });
             },
           ),
         ),

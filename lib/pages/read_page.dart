@@ -50,21 +50,11 @@ class _ReadPageState extends State<ReadPage> {
         actions: <Widget>[
           IconButton(
             icon: Icon(Icons.arrow_left),
-            onPressed: () {
-              setState(() {
-                chapter--;
-                _chapterChanged();
-              });
-            },
+            onPressed: previousChapter,
           ),
           IconButton(
             icon: Icon(Icons.arrow_right),
-            onPressed: () {
-              setState(() {
-                chapter++;
-                _chapterChanged();
-              });
-            },
+            onPressed: nextChapter,
           )
         ],
       ),
@@ -127,6 +117,20 @@ class _ReadPageState extends State<ReadPage> {
         ),
       ),
     );
+  }
+
+  void nextChapter() {
+    setState(() {
+      chapter++;
+      _chapterChanged();
+    });
+  }
+
+  void previousChapter() {
+    setState(() {
+      chapter--;
+      _chapterChanged();
+    });
   }
 
   void _chapterChanged() {

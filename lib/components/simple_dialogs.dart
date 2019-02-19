@@ -6,13 +6,13 @@ import 'text_edit_dialog.dart';
 class SimpleDialogs {
   static void alert(
       {@required BuildContext context,
-      @required String title,
+      String title,
       @required String content}) {
     showDialog(
         context: context,
         builder: (context) {
           return AlertDialog(
-            title: Text(title),
+            title: title != null ? Text(title) : null,
             content: Text(
               content,
               style: Theme.of(context)

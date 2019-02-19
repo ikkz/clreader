@@ -105,20 +105,9 @@ class DrawerPage extends StatelessWidget {
                         ));
                       });
                       return SimpleDialog(
-                          titlePadding: EdgeInsets.all(0),
-                          title: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              Padding(
-                                padding: EdgeInsets.all(15),
-                                child: Text(
-                                  "请选择主题色",
-                                  style: Theme.of(context).textTheme.title,
-                                ),
-                              ),
-                              divider
-                            ],
-                          ),
+                          titlePadding: const EdgeInsets.all(24),
+                          title: const Text("请选择主题色"),
+                          contentPadding: const EdgeInsets.all(0),
                           children: themeColors);
                     });
               },

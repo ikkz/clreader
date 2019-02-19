@@ -23,6 +23,12 @@ class _TextEditDiaglogState extends State<TextEditDiaglog> {
   }
 
   @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return SimpleDialog(
       title: Text(widget.title),

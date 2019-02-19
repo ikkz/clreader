@@ -131,68 +131,53 @@ class _BookShelfMgrPageState extends State<BookShelfMgrPage> {
   }
 
   Widget _buildList(BuildContext context) {
-    if (items.isEmpty) {
-      for (var i = 0; i < bookShelves.length; i++) {
-        items.add(BookShelfItem(
-          key: Key(bookShelves[i].name),
-          selected: selected[i],
-          bookShelf: bookShelves[i],
-          onCheckboxChanged: bookShelves[i].name == Strings.defaultBookShelf
-              ? null
-              : (value) {
-                  setState(() {
-                    selected[i] = value;
-                    print(value);
-                  });
-                },
-          onEdit: bookShelves[i].name != Strings.defaultBookShelf
-              ? () {
-                  SimpleDialogs.edit_text(
-                    context: _thisContext,
-                    title: "修改书架名称",
-                    defaultText: bookShelves[i].name,
-                  ).then((value) {
-                    if (value != null) {
-                      if (!_checkTautonymy(value)) {
-                        return;
-                      }
-                      setState(() {
-                        bookShelves[i].name = value;
-                      });
-                      ClMainModel.of(_thisContext)
-                          .updateBookShelf(bookShelves[i]);
-                    }
-                  });
-                }
-              : () {
-                  SimpleDialogs.alert(
+    items.clear();
+    return ListView.builder(
+        itemCount: selected.length,
+        itemBuilder: (context, i) {
+          return BookShelfItem(
+            selected: selected[i],
+            bookShelf: bookShelves[i],
+            onCheckboxChanged: bookShelves[i].name == Strings.defaultBookShelf
+                ? null
+                : (value) {
+                    setState(() {
+                      selected[i] = value;
+                    });
+                  },
+            onEdit: bookShelves[i].name != Strings.defaultBookShelf
+                ? () {
+                    SimpleDialogs.edit_text(
                       context: _thisContext,
-                      title: "提示",
-                      content: "不允许修改默认书架的名称！");
-                },
-        ));
-      }
-    }
-    return ReorderableListView(
-      children: items,
-      onReorder: _onReorder,
-    );
-  }
-
-  void _onReorder(int oldIndex, int newIndex) {
-    if (newIndex > oldIndex) {
-      newIndex -= 1;
-    }
-    int id = bookShelves[oldIndex].id;
-    bookShelves[oldIndex].id = bookShelves[newIndex].id;
-    bookShelves[newIndex].id = id;
-    final mainModel = ClMainModel.of(context);
-    mainModel.updateBookShelf(bookShelves[oldIndex]);
-    mainModel.updateBookShelf(bookShelves[newIndex]);
-    setState(() {
-      final item = items.removeAt(oldIndex);
-      items.insert(newIndex, item);
-    });
+                      title: "修改书架名称",
+                      defaultText: bookShelves[i].name,
+                    ).then((value) async {
+                      if (value != null) {
+                        if (!_checkTautonymy(value)) {
+                          return;
+                        }
+                        if ((await ClMainModel.of(_thisContext)
+                                .selectedBookShelf) ==
+                            bookShelves[i].name) {
+                          ClMainModel.of(_thisContext)
+                              .setSelectedBookShelf(value);
+                        }
+                        setState(() {
+                          bookShelves[i].name = value;
+                        });
+                        ClMainModel.of(_thisContext)
+                            .updateBookShelf(bookShelves[i]);
+                      }
+                    });
+                  }
+                : () {
+                    SimpleDialogs.alert(
+                        context: _thisContext,
+                        title: "提示",
+                        content: "不允许修改默认书架的名称！");
+                  },
+          );
+        });
   }
 
   void _reload() {

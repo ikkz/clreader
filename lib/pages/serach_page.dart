@@ -6,35 +6,39 @@ import 'package:clreader/models/main_model.dart';
 import 'package:clreader/pages/book_detail_page.dart';
 
 class SearchPage extends StatefulWidget {
+  final String searchText;
+  final bool name;
+  SearchPage({this.searchText, this.name});
+
   @override
   _SearchPageState createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> {
+  bool _searched = false;
   List<BookInfo> _books = [];
-  String _searchText = "";
-  int searchId = 0;
-  bool showCpi = false;
+
+  @override
+  void initState() {
+    super.initState();
+  }
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    if (!_searched) {
+      _search();
+      _searched = true;
+    }
+  }
 
   void _search() async {
-    if (_searchText.isEmpty) {
-      return;
-    }
-    if (mounted) {
-      setState(() {
-        _books.clear();
-        showCpi = true;
-      });
-    } else {
-      return;
-    }
-    searchId++;
     (await ClMainModel.of(context).bookSrcs).forEach((src) {
       src.search(
-          name: _searchText,
-          searchId: searchId,
-          callback: (info, id) {
-            if (id != this.searchId || (!mounted)) {
+          name: widget.name ? widget.searchText : null,
+          author: widget.name ? null : widget.searchText,
+          callback: (info) {
+            if (!mounted) {
               return false;
             }
             setState(() {
@@ -49,38 +53,37 @@ class _SearchPageState extends State<SearchPage> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: TextField(
-          onChanged: (text) {
-            _searchText = text;
-          },
-        ),
-        actions: <Widget>[
-          Padding(
-              padding: EdgeInsets.only(right: 20),
-              child: IconButton(
-                icon: Icon(Icons.search),
-                onPressed: () {
-                  _search();
-                },
-              )),
-        ],
+        title: Text("搜索: ${widget.searchText}"),
+        actions: <Widget>[],
       ),
-      body: ListView.builder(
-        itemCount: _books.length,
-        itemBuilder: (context, i) {
-          return GestureDetector(
-            child: BookItem(
-              bookInfo: _books[i],
-            ),
-            onTap: () {
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return BookDetailPage(
-                  bookInfo: _books[i],
+      body: Column(
+        children: <Widget>[
+          Container(
+            height: 3,
+            child: LinearProgressIndicator(),
+          ),
+          Expanded(
+            flex: 1,
+            child: ListView.builder(
+              itemCount: _books.length,
+              itemBuilder: (context, i) {
+                return GestureDetector(
+                  child: BookItem(
+                    bookInfo: _books[i],
+                  ),
+                  onTap: () {
+                    Navigator.of(context)
+                        .push(MaterialPageRoute(builder: (context) {
+                      return BookDetailPage(
+                        bookInfo: _books[i],
+                      );
+                    }));
+                  },
                 );
-              }));
-            },
-          );
-        },
+              },
+            ),
+          )
+        ],
       ),
     );
   }
