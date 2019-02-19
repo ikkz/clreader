@@ -37,4 +37,9 @@ class ClMainModel extends BaseModel
   static ClMainModel of(BuildContext context) {
     return ScopedModel.of<ClMainModel>(context, rebuildOnChange: true);
   }
+
+  @override
+  void notifyListeners() {
+    super.notifyListeners();
+  }
 }

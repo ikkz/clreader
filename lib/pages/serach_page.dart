@@ -67,10 +67,8 @@ class _SearchPageState extends State<SearchPage> {
             child: ListView.builder(
               itemCount: _books.length,
               itemBuilder: (context, i) {
-                return GestureDetector(
-                  child: BookItem(
-                    bookInfo: _books[i],
-                  ),
+                return BookItem(
+                  bookInfo: _books[i],
                   onTap: () {
                     Navigator.of(context)
                         .push(MaterialPageRoute(builder: (context) {

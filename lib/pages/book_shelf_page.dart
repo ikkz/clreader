@@ -144,7 +144,7 @@ class _BookShelfPageState extends State<BookShelfPage> {
                         }
                       }
                       return ListView.builder(
-                        padding: EdgeInsets.all(10),
+                        padding: EdgeInsets.symmetric(vertical: 10),
                         itemCount: bookShelf.bookIds.length,
                         itemBuilder: (context, i) {
                           BookInfo info = null;
@@ -154,25 +154,11 @@ class _BookShelfPageState extends State<BookShelfPage> {
                               break;
                             }
                           }
-                          return GestureDetector(
-                            child: BookItem(
-                              bookInfo: info,
-                            ),
-                            onLongPress: () {
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context) {
-                                return BookDetailPage(
-                                  bookInfo: info,
-                                );
-                              }));
-                            },
-                            onTap: () {
-                              Navigator.of(context)
-                                  .push(MaterialPageRoute(builder: (context) {
-                                return ReadPage(
-                                  bookInfo: info,
-                                );
-                              }));
+                          return BookItem(
+                            bookInfo: info,
+                            onTap: () => readBook(info),
+                            onMoreTap: () {
+                              showMore(context, bookShelf, info);
                             },
                           );
                         },
@@ -202,6 +188,55 @@ class _BookShelfPageState extends State<BookShelfPage> {
 
   Widget _buildBody(BuildContext context) {
     return _buildBookShelf(context);
+  }
+
+  void readBook(BookInfo bookInfo) {
+    Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+      return ReadPage(
+        bookInfo: bookInfo,
+      );
+    }));
+  }
+
+  void showMore(BuildContext context, BookShelf bookShelf, BookInfo bookInfo) {
+    showModalBottomSheet<void>(
+        context: context,
+        builder: (context) {
+          return Column(
+            mainAxisSize: MainAxisSize.min,
+            children: <Widget>[
+              ListTile(
+                title: Text("详情"),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (context) {
+                    return BookDetailPage(
+                      bookInfo: bookInfo,
+                    );
+                  }));
+                },
+              ),
+              ListTile(
+                title: const Text("阅读"),
+                onTap: () {
+                  Navigator.of(context).pop();
+                  readBook(bookInfo);
+                },
+              ),
+              ListTile(
+                title: Text("从此书架移除"),
+                onTap: () {
+                  bookShelf.bookIds
+                      .removeAt(bookShelf.bookIds.indexOf(bookInfo.id));
+                  ClMainModel.of(context).updateBookShelf(bookShelf);
+                  ClMainModel.of(context).notifyListeners();
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          );
+        });
   }
 
   @override
