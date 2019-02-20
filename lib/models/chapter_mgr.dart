@@ -8,7 +8,7 @@ class ChapterMgr extends BaseModel {
   Future<void> createChapters(BookInfo bookInfo) async {
     final db = await database;
     await db.execute('''
-        create table if not exists ${bookInfo.name} (
+        create table if not exists ${tableName(bookInfo)} (
           $columnChapterId integer primary key autoincrement,
           $columnChapterIndex integer not null,
           $columnChapterUrl text not null,
@@ -17,9 +17,13 @@ class ChapterMgr extends BaseModel {
       ''');
   }
 
+  static String tableName(BookInfo bookInfo) {
+    return "${bookInfo.name}${bookInfo.author}";
+  }
+
   Future<List<Chapter>> getChapters(BookInfo bookInfo) async {
     final db = await database;
-    final cs = await db.query(bookInfo.name);
+    final cs = await db.query(tableName(bookInfo));
     if (cs == null) return null;
     List<Chapter> lc = [];
     for (var item in cs) {
@@ -30,25 +34,25 @@ class ChapterMgr extends BaseModel {
 
   Future<int> deleteChapter(BookInfo bookInfo, int id) async {
     final db = await database;
-    return await db
-        .delete(bookInfo.name, where: "$columnChapterId = ?", whereArgs: [id]);
+    return await db.delete(tableName(bookInfo),
+        where: "$columnChapterId = ?", whereArgs: [id]);
   }
 
   Future<void> addChapters(BookInfo bookInfo, List<Chapter> chapters) async {
     final db = await database;
     for (var item in chapters) {
-      await db.insert(bookInfo.name, item.toMap());
+      await db.insert(tableName(bookInfo), item.toMap());
     }
   }
 
   Future<int> updateChapter(BookInfo bookInfo, Chapter chapter) async {
     final db = await database;
-    return await db.update(bookInfo.name, chapter.toMap(),
+    return await db.update(tableName(bookInfo), chapter.toMap(),
         where: "$columnChapterId = ?", whereArgs: [chapter.id]);
   }
 
   Future<void> clearChapters(BookInfo bookInfo) async {
     final db = await database;
-    await db.delete(bookInfo.name);
+    await db.delete(tableName(bookInfo));
   }
 }
