@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:async';
-import 'package:clreader/components/simple_dialogs.dart';
 
+import 'package:clreader/components/simple_dialogs.dart';
 import 'package:clreader/book/book_info.dart';
 import 'package:clreader/models/main_model.dart';
 import 'package:clreader/book/chapter.dart';
@@ -15,86 +15,43 @@ class BookDetailPage extends StatefulWidget {
   BookDetailPage({@required this.bookInfo});
 }
 
+enum AppBarBehavior { normal, pinned, floating, snapping }
+
 class _BookDetailPageState extends State<BookDetailPage> {
+  final double _appBarHeight = 256.0;
+  AppBarBehavior _appBarBehavior = AppBarBehavior.pinned;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text("书籍信息"),
-        actions: <Widget>[
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 8.0),
-            child: IconButton(
-              icon: Icon(Icons.add),
-              onPressed: () {
-                _addToBookShelf();
-              },
-            ),
-          )
-        ],
-      ),
-      body: Column(
-        children: <Widget>[
-          Container(
-            padding: EdgeInsets.all(16),
-            height: 150,
-            alignment: Alignment.center,
-            child: Row(
-              children: <Widget>[
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 3),
-                        child: Text(
-                          widget.bookInfo.name,
-                          style: Theme.of(context).textTheme.subhead,
-                        ),
-                      ),
-                      Row(
-                        children: <Widget>[
-                          CircleAvatar(
-                            radius: 7,
-                            backgroundColor: Colors.grey,
-                            foregroundColor: Colors.white,
-                            child: Icon(
-                              Icons.person,
-                              size: 14,
-                            ),
-                          ),
-                          Container(
-                            width: 5,
-                          ),
-                          Text(
-                            widget.bookInfo.author,
-                            style: Theme.of(context)
-                                .textTheme
-                                .subtitle
-                                .copyWith(color: Colors.grey),
-                          ),
-                        ],
-                      ),
-                      Divider(
-                        height: 2,
-                      ),
-                      Expanded(
-                        flex: 1,
-                        child: Scrollbar(
-                          child: SingleChildScrollView(
-                            child: Text(widget.bookInfo.introduction),
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
-                ),
-                Container(
-                    color: Theme.of(context).dialogBackgroundColor,
-                    height: 150,
-                    width: 110,
-                    child: CachedNetworkImage(
+      body: CustomScrollView(
+        slivers: <Widget>[
+          SliverAppBar(
+            expandedHeight: _appBarHeight,
+            pinned: _appBarBehavior == AppBarBehavior.pinned,
+            floating: _appBarBehavior == AppBarBehavior.floating ||
+                _appBarBehavior == AppBarBehavior.snapping,
+            snap: _appBarBehavior == AppBarBehavior.snapping,
+            actions: <Widget>[
+              IconButton(
+                icon: Icon(Icons.add),
+                onPressed: () {
+                  _addToBookShelf();
+                },
+              )
+            ],
+            flexibleSpace: FlexibleSpaceBar(
+                centerTitle: true,
+                title: Text("${widget.bookInfo.name}"),
+                background: Stack(
+                  fit: StackFit.expand,
+                  children: <Widget>[
+                    Container(
+                      height: double.infinity,
+                      width: double.infinity,
+                      color: Theme.of(context).appBarTheme.color,
+                    ),
+                    CachedNetworkImage(
                       imageUrl: widget.bookInfo.urlCover,
                       placeholder: Center(
                         child: CircularProgressIndicator(),
@@ -102,44 +59,35 @@ class _BookDetailPageState extends State<BookDetailPage> {
                       errorWidget: Center(
                         child: Icon(Icons.error),
                       ),
-                    )),
-              ],
-            ),
+                    ),
+                  ],
+                )),
           ),
-          Divider(
-            height: 2,
-          ),
-          Expanded(
-            flex: 1,
-            child: FutureBuilder(
-              future: _getChapters(),
-              builder: (context, AsyncSnapshot<List<Chapter>> ssChapters) {
-                if (ssChapters.connectionState == ConnectionState.done) {
-                  if (ssChapters.data != null) {
-                    return Scrollbar(
-                      child: ListView.builder(
-                        itemCount: ssChapters.data.length,
-                        itemBuilder: (context, i) {
-                          return ListTile(
-                            title: Text(
-                                "${ssChapters.data[i].index.toString()}. ${ssChapters.data[i].name}"),
-                            onTap: () {},
-                          );
-                        },
-                      ),
-                    );
-                  } else {
-                    return Center(
-                      child: Icon(Icons.error),
-                    );
-                  }
-                } else {
-                  return Center(
-                    child: CircularProgressIndicator(),
+          FutureBuilder(
+            future: _getChapters(),
+            builder: (context, AsyncSnapshot<List<Chapter>> ssChapters) {
+              if (ssChapters.connectionState == ConnectionState.done) {
+                if (ssChapters.data != null) {
+                  return SliverList(
+                    delegate: SliverChildBuilderDelegate((context, i) {
+                      return ListTile(
+                        title: Text(
+                            "${ssChapters.data[i].index.toString()}. ${ssChapters.data[i].name}"),
+                        onTap: () {},
+                      );
+                    }, childCount: ssChapters.data.length),
                   );
+                } else {
+                  return SliverList(
+                      delegate: SliverChildListDelegate(
+                          <Widget>[Center(child: Icon(Icons.error))]));
                 }
-              },
-            ),
+              } else {
+                return SliverList(
+                    delegate: SliverChildListDelegate(
+                        <Widget>[Center(child: CircularProgressIndicator())]));
+              }
+            },
           )
         ],
       ),

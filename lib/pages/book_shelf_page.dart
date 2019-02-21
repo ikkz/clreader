@@ -82,36 +82,30 @@ class _BookShelfPageState extends State<BookShelfPage> {
             }
           }),
       actions: <Widget>[
-        Padding(
-          padding: EdgeInsets.symmetric(horizontal: 20.0),
-          child: IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {
-              // Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-              //   return SearchPage();
-              // }));
-              showDialog(
-                  context: context,
-                  builder: (context) {
-                    return SearchDialog();
-                  }).then((value) {
-                if (value == null) {
-                  return;
-                }
-                if (value["searchText"].isEmpty) {
-                  SimpleDialogs.alert(context: context, content: "请输入内容！");
-                  return;
-                }
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (context) {
-                  return SearchPage(
-                    searchText: value["searchText"],
-                    name: value["name"],
-                  );
-                }));
-              });
-            },
-          ),
+        IconButton(
+          icon: Icon(Icons.search),
+          onPressed: () {
+            showDialog(
+                context: context,
+                builder: (context) {
+                  return SearchDialog();
+                }).then((value) {
+              if (value == null) {
+                return;
+              }
+              if (value["searchText"].isEmpty) {
+                SimpleDialogs.alert(context: context, content: "请输入内容！");
+                return;
+              }
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (context) {
+                return SearchPage(
+                  searchText: value["searchText"],
+                  name: value["name"],
+                );
+              }));
+            });
+          },
         ),
       ],
     );

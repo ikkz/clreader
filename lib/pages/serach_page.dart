@@ -54,7 +54,6 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       appBar: AppBar(
         title: Text("搜索: ${widget.searchText}"),
-        actions: <Widget>[],
       ),
       body: Column(
         children: <Widget>[
