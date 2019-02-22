@@ -41,8 +41,7 @@ class _BookDetailPageState extends State<BookDetailPage> {
               )
             ],
             flexibleSpace: FlexibleSpaceBar(
-                centerTitle: true,
-                title: Text("${widget.bookInfo.name}"),
+                title: const Text("目录"),
                 background: Stack(
                   fit: StackFit.expand,
                   children: <Widget>[
@@ -51,15 +50,84 @@ class _BookDetailPageState extends State<BookDetailPage> {
                       width: double.infinity,
                       color: Theme.of(context).appBarTheme.color,
                     ),
-                    CachedNetworkImage(
-                      imageUrl: widget.bookInfo.urlCover,
-                      placeholder: Center(
-                        child: CircularProgressIndicator(),
+                    Container(
+                      height: 100,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: <Widget>[
+                          Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: 20, vertical: 10),
+                            height: 150,
+                            child: CachedNetworkImage(
+                              imageUrl: widget.bookInfo.urlCover,
+                              placeholder: Center(
+                                child: CircularProgressIndicator(),
+                              ),
+                              errorWidget: Center(
+                                child: Icon(Icons.error),
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 1,
+                            child: Padding(
+                              padding: const EdgeInsets.only(right: 10),
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Row(
+                                    children: <Widget>[
+                                      Expanded(
+                                        flex: 1,
+                                        child: Text(
+                                          widget.bookInfo.name,
+                                          style: Theme.of(context)
+                                              .textTheme
+                                              .subhead,
+                                          overflow: TextOverflow.ellipsis,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                  Row(
+                                    children: <Widget>[
+                                      CircleAvatar(
+                                        radius: 7,
+                                        backgroundColor: Colors.grey,
+                                        foregroundColor: Colors.white,
+                                        child: Icon(
+                                          Icons.person,
+                                          size: 14,
+                                        ),
+                                      ),
+                                      Container(
+                                        width: 5,
+                                      ),
+                                      Text(
+                                        widget.bookInfo.author,
+                                        style: Theme.of(context)
+                                            .textTheme
+                                            .subtitle
+                                            .copyWith(color: Colors.grey),
+                                      ),
+                                    ],
+                                  ),
+                                  Container(height: 5),
+                                  Text(
+                                    widget.bookInfo.introduction,
+                                    maxLines: 7,
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Theme.of(context).textTheme.overline,
+                                  ),
+                                ],
+                              ),
+                            ),
+                          )
+                        ],
                       ),
-                      errorWidget: Center(
-                        child: Icon(Icons.error),
-                      ),
-                    ),
+                    )
                   ],
                 )),
           ),
