@@ -11,7 +11,7 @@ addons:
       - libstdc++6
       - fonts-droid
 before_script:
-  - git clone https://github.com/flutter/flutter.git -b beta
+  - git clone https://github.com/flutter/flutter.git
   - ./flutter/bin/flutter doctor
 script:
   - ./flutter/bin/flutter test
