@@ -3,7 +3,7 @@ import 'package:meta/meta.dart';
 
 import 'package:clreader/book/book_shelf.dart';
 
-class BookShelfItem extends StatefulWidget {
+class BookShelfItem extends StatelessWidget {
   final BookShelf bookShelf;
   final bool selected;
   final ValueChanged<bool> onCheckboxChanged;
@@ -18,23 +18,18 @@ class BookShelfItem extends StatefulWidget {
       : super(key: key);
 
   @override
-  _BookShelfItemState createState() => _BookShelfItemState();
-}
-
-class _BookShelfItemState extends State<BookShelfItem> {
-  @override
   Widget build(BuildContext context) {
     return ListTile(
       leading: Checkbox(
-        value: widget.selected,
-        onChanged: widget.onCheckboxChanged,
+        value: selected,
+        onChanged: onCheckboxChanged,
       ),
       title: Text(
-        "${widget.bookShelf.name} (${widget.bookShelf.bookIds.length})",
+        "${bookShelf.name} (${bookShelf.bookIds.length})",
       ),
       trailing: IconButton(
         icon: Icon(Icons.edit),
-        onPressed: widget.onEdit,
+        onPressed: onEdit,
       ),
     );
   }
