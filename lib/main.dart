@@ -15,7 +15,7 @@ class ClReader extends StatefulWidget {
 }
 
 class ClReaderState extends State<ClReader> {
-  Widget _defalutHome(BuildContext context) {
+  Widget _defaultHome(BuildContext context) {
     return MaterialApp(
         title: Strings.applicationName,
         theme: ThemeData.light(),
@@ -45,7 +45,7 @@ class ClReaderState extends State<ClReader> {
                 },
               ));
         } else {
-          return _defalutHome(context);
+          return _defaultHome(context);
         }
       },
     );
