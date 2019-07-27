@@ -14,11 +14,11 @@ dependencies:
   scoped_model: ^1.0.1
   clipboard_manager: ^0.0.4
   shared_preferences: ^0.4.3
-  cached_network_image: ^0.5.1
-  sqflite: ^1.0.0
+  cached_network_image: ^1.1.1
+  sqflite: ^1.1.6+2
   dio: ^1.0.14
-  html: any
-  gbk2utf8: ^0.0.1
+  html: ^0.14.0+2
+  gbk2utf8: ^1.0.0
   fish_redux: any
 dev_dependencies:
   flutter_test:

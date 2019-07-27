@@ -61,12 +61,12 @@ class _BookDetailPageState extends State<BookDetailPage> {
                             height: 150,
                             child: CachedNetworkImage(
                               imageUrl: widget.bookInfo.urlCover,
-                              placeholder: Center(
-                                child: CircularProgressIndicator(),
-                              ),
-                              errorWidget: Center(
-                                child: Icon(Icons.error),
-                              ),
+                              placeholder: (ctx, s) => Center(
+                                    child: CircularProgressIndicator(),
+                                  ),
+                              errorWidget: (ctx, s, o) => Center(
+                                    child: Icon(Icons.error),
+                                  ),
                             ),
                           ),
                           Expanded(

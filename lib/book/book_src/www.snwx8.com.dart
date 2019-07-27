@@ -27,12 +27,12 @@ class Snwx8 extends BookSrc {
     while (li != null) {
       BookInfo info = BookInfo();
       final s2a = li.querySelector("span.s2 > a");
-      info.name = decodeGbk(s2a.text.codeUnits);
+      info.name = gbk.decode(s2a.text.codeUnits);
       info.srcId = this.id;
       info.srcsUrl[this.id] = s2a.attributes["href"];
 
       final s4a = li.querySelector("span.s4 > a");
-      info.author = decodeGbk(s4a.text.codeUnits);
+      info.author = gbk.decode(s4a.text.codeUnits);
 
       final pageRes = await http.get(info.srcsUrl[this.id]);
       if (pageRes != null) {
@@ -47,7 +47,7 @@ class Snwx8 extends BookSrc {
         }
         final intro = pageDoc.querySelector("#info > div.intro");
         info.introduction =
-            util.removeHtmlTag(decodeGbk(intro.innerHtml.codeUnits));
+            util.removeHtmlTag(gbk.decode(intro.innerHtml.codeUnits));
         info.introduction = info.introduction
             .substring(info.introduction.indexOf(RegExp("简介")) + 4);
       }
@@ -75,7 +75,7 @@ class Snwx8 extends BookSrc {
       final a = parse(li.innerHtml).querySelector("a");
       chapter.index = index++;
       chapter.url = a.attributes["href"];
-      chapter.name = decodeGbk(a.text.codeUnits);
+      chapter.name = gbk.decode(a.text.codeUnits);
       chapter.content = "";
       chapters.add(chapter);
       li = li.nextElementSibling;
@@ -89,7 +89,7 @@ class Snwx8 extends BookSrc {
       final doc = parse((await http.get(contentUrl)).body);
       final content = doc.querySelector("#BookText");
       return util
-          .removeHtmlTag(decodeGbk(content.innerHtml.codeUnits))
+          .removeHtmlTag(gbk.decode(content.innerHtml.codeUnits))
           .replaceAll(RegExp("牋"), "");
     } catch (e) {
       return "";
