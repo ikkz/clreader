@@ -20,14 +20,20 @@ public class MainActivity extends FlutterActivity {
 				new MethodChannel.MethodCallHandler() {
 					@Override
 					public void onMethodCall(MethodCall methodCall, MethodChannel.Result result) {
-						try {
-							if (methodCall.method.equals("gbk_urlencode")) {
-								result.success(java.net.URLEncoder.encode((String) methodCall.arguments, "GBK"));
-							} else {
-								result.notImplemented();
-							}
-						} catch (UnsupportedEncodingException e) {
-							result.error(e.getMessage(), null, null);
+						if (methodCall.method.equals("search")) {
+							BookSrcRunner runner = new BookSrcRunner();
+							runner.eval((String) methodCall.argument("js"));
+							result.success(runner.search((String) methodCall.argument("str")));
+						} else if (methodCall.method.equals("getChapters")) {
+							BookSrcRunner runner = new BookSrcRunner();
+							runner.eval((String) methodCall.argument("js"));
+							result.success(runner.getChapters((String) methodCall.argument("str")));
+						} else if (methodCall.method.equals("getContent")) {
+							BookSrcRunner runner = new BookSrcRunner();
+							runner.eval((String) methodCall.argument("js"));
+							result.success(runner.getContent((String) methodCall.argument("str")));
+						} else {
+							result.notImplemented();
 						}
 					}
 				}

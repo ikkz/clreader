@@ -7,8 +7,7 @@ import 'package:clreader/pages/book_detail_page.dart';
 
 class SearchPage extends StatefulWidget {
   final String searchText;
-  final bool name;
-  SearchPage({this.searchText, this.name});
+  SearchPage({this.searchText});
 
   @override
   _SearchPageState createState() => _SearchPageState();
@@ -33,19 +32,10 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void _search() async {
-    (await ClMainModel.of(context).bookSrcs).forEach((src) {
-      src.search(
-          name: widget.name ? widget.searchText : null,
-          author: widget.name ? null : widget.searchText,
-          callback: (info) {
-            if (!mounted) {
-              return false;
-            }
-            setState(() {
-              _books.add(info);
-            });
-            return true;
-          });
+    (await ClMainModel.of(context).getBookSrcs()).forEach((src) {
+      this.setState(() async {
+        _books.addAll(await src.search(widget.searchText));
+      });
     });
   }
 

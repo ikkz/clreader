@@ -62,11 +62,11 @@ class _BookDetailPageState extends State<BookDetailPage> {
                             child: CachedNetworkImage(
                               imageUrl: widget.bookInfo.urlCover,
                               placeholder: (ctx, s) => Center(
-                                    child: CircularProgressIndicator(),
-                                  ),
+                                child: CircularProgressIndicator(),
+                              ),
                               errorWidget: (ctx, s, o) => Center(
-                                    child: Icon(Icons.error),
-                                  ),
+                                child: Icon(Icons.error),
+                              ),
                             ),
                           ),
                           Expanded(
@@ -169,9 +169,9 @@ class _BookDetailPageState extends State<BookDetailPage> {
     if (chapters != null && chapters.isNotEmpty) {
       return chapters;
     } else {
-      final src = mainModel.getBookSrc(widget.bookInfo.srcId);
+      final src = await mainModel.getBookSrc(widget.bookInfo.srcId);
       if (src != null) {
-        chapters = await src.getChapters(widget.bookInfo.srcsUrl[src.id]);
+        chapters = await src.getChapters(widget.bookInfo.srcsUrl[src.sha]);
         mainModel.addChapters(widget.bookInfo, chapters);
         return chapters;
       }

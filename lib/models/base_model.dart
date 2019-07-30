@@ -38,8 +38,10 @@ class BaseModel extends Model {
           ''');
       await db.execute('''
         create table $tableBookSrc (
-          $columnBookSrcId text primary key,
-          $columnBookSrcEnabled integer not null)
+          $columnBookSrcEnabled integer not null,
+          $columnBookSrcName text not null,
+          $columnBookSrcJs text not null,
+          $columnBookSrcSHA text primary key)
       ''');
     });
   }

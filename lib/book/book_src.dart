@@ -2,48 +2,53 @@ import 'dart:async';
 
 import 'package:clreader/book/book_info.dart';
 import 'package:clreader/book/chapter.dart';
-
-typedef BookCallback = bool Function(BookInfo);
+import 'package:clreader/platform/src_run.dart' as run;
 
 final String tableBookSrc = "bookSrcs";
-final String columnBookSrcId = "_id";
+final String columnBookSrcName = "name";
 final String columnBookSrcEnabled = "enabled";
+final String columnBookSrcJs = "js";
+final String columnBookSrcSHA = "sha";
 
 class BookSrc {
-  //using guid as primary key;
-  String _id;
-  bool enabled = true;
-  String _name;
+  bool enabled;
+  String name;
+  String js;
+  String sha;
 
-  String get id => _id;
-  String get name => _name;
-  set id(String id) => _id = id;
-  set name(String name) => _name = name;
-
-  Future<void> search(
-      {String name, String author, BookCallback callback}) async {
-    return null;
-  }
-
-  Future<List<Chapter>> getChapters(String bookUrl) async {
-    return null;
-  }
-
-  Future<String> getContent(String contentUrl) async {
-    return null;
-  }
-
-  BookSrc();
+  BookSrc({this.name, this.js, this.enabled, this.sha});
 
   BookSrc.fromMap(Map<String, dynamic> map)
-      : _id = map[columnBookSrcId],
-        enabled = map[columnBookSrcEnabled] == 1;
+      : name = map[columnBookSrcName],
+        enabled = map[columnBookSrcEnabled] == 1,
+        js = map[columnBookSrcJs],
+        sha = map[columnBookSrcSHA];
 
   Map<String, dynamic> toMap() {
-    var map = <String, dynamic>{columnBookSrcEnabled: enabled ? 1 : 0};
-    if (_id != null) {
-      map[columnBookSrcId] = _id;
+    var map = <String, dynamic>{
+      columnBookSrcName: name,
+      columnBookSrcEnabled: enabled ? 1 : 0,
+      columnBookSrcJs: js,
+      columnBookSrcSHA: sha
+    };
+    if (sha != null) {
+      map[columnBookSrcSHA] = sha;
     }
     return map;
+  }
+
+  Future<List<BookInfo>> search(String text) async {
+    print(await run.search(js, text));
+    return [];
+  }
+
+  Future<String> getContent(String url) async {
+    print(await run.getContent(js, url));
+    return "";
+  }
+
+  Future<List<Chapter>> getChapters(String url) async {
+    print(await run.getChapters(js, url));
+    return [];
   }
 }

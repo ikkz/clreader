@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'package:clreader/book/chapter.dart';
@@ -34,6 +35,16 @@ class _ReadPageState extends State<ReadPage> {
             },
           )
         : _buildPage();
+  }
+
+  Future<String> _getContent(String url) async {
+    final mainModel = ClMainModel.of(context);
+    final src = await mainModel.getBookSrc(widget.bookInfo.srcId);
+    if (src != null) {
+      return await src.getContent(url);
+    } else {
+      return "";
+    }
   }
 
   Widget _buildPage() {
@@ -85,9 +96,7 @@ class _ReadPageState extends State<ReadPage> {
       ),
       body: (chapters[chapter - 1].content.isEmpty
           ? FutureBuilder(
-              future: mainModel
-                  .getBookSrc(widget.bookInfo.srcId)
-                  .getContent(chapters[chapter - 1].url),
+              future: _getContent(chapters[chapter - 1].url),
               builder: (context, AsyncSnapshot<String> ssContent) {
                 if (ssContent.connectionState == ConnectionState.done) {
                   chapters[chapter - 1].content = ssContent.data;

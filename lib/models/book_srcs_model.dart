@@ -3,62 +3,44 @@ import 'dart:async';
 import 'package:clreader/book/book_src.dart';
 import 'package:clreader/models/base_model.dart';
 
-//srcs
-import 'package:clreader/book/book_src/www.snwx8.com.dart';
-
 class BookSrcsModel extends BaseModel {
-  List<BookSrc> _bookSrcs;
-
-  Future<List<BookSrc>> get bookSrcs async => _bookSrcs ?? await initBookSrcModel();
-
-  Future<List<BookSrc>> initBookSrcModel() async {
+  Future<BookSrc> insertBookSrc(BookSrc bookSrc) async {
     final db = await database;
-    List<BookSrc> config = [];
-    (await db.query(tableBookSrc)).forEach((map) {
-      config.add(BookSrc.fromMap(map));
-    });
-    Map<String, bool> configs = {};
-    for (var item in config) {
-      configs[item.id] = item.enabled;
-    }
-    List<BookSrc> srcs = _initBookSrcList();
-    for (var item in srcs) {
-      if (configs.containsKey(item.id)) {
-        item.enabled = configs[item.id];
-      }
-    }
-    _bookSrcs = srcs;
-    return srcs;
+    await db.insert(tableBookSrc, bookSrc.toMap());
+    return bookSrc;
   }
 
-  List<BookSrc> _initBookSrcList() {
-    List<BookSrc> srcs = [];
-    //to add subtype of BookSrc here
-    srcs.add(Snwx8());
-
-    return srcs;
+  Future<List<BookSrc>> getBookSrcs() async {
+    final db = await database;
+    List<Map> maps = await db.query(tableBookSrc);
+    return maps.map((map) {
+      return BookSrc.fromMap(map);
+    }).toList();
   }
 
-  void updateBookSrc(BookSrc bookSrc) async {
+  Future<BookSrc> getBookSrc(String sha) async {
     final db = await database;
     List<Map> maps = await db.query(tableBookSrc,
-        columns: [columnBookSrcId, columnBookSrcEnabled],
-        where: "$columnBookSrcId = ?",
-        whereArgs: [bookSrc.id]);
-    if (maps.isEmpty) {
-      db.insert(tableBookSrc, bookSrc.toMap());
-    } else {
-      db.update(tableBookSrc, bookSrc.toMap(),
-          where: "$columnBookSrcId = ? ", whereArgs: [bookSrc.id]);
-    }
+        columns: [
+          columnBookSrcName,
+          columnBookSrcEnabled,
+          columnBookSrcJs,
+          columnBookSrcSHA
+        ],
+        where: "$columnBookSrcSHA = ?",
+        whereArgs: [sha]);
+    return maps.length > 0 ? BookSrc.fromMap(maps.first) : null;
   }
 
-  BookSrc getBookSrc(String id) {
-    for (var item in _bookSrcs) {
-      if (id == item.id) {
-        return item;
-      }
-    }
-    return null;
+  Future<int> deleteBookSrc(String sha) async {
+    final db = await database;
+    return await db
+        .delete(tableBookSrc, where: "$columnBookSrcSHA = ?", whereArgs: [sha]);
+  }
+
+  Future<int> updateBookSrc(BookSrc bookSrc) async {
+    final db = await database;
+    return await db.update(tableBookSrc, bookSrc.toMap(),
+        where: "$columnBookSrcSHA = ?", whereArgs: [bookSrc.sha]);
   }
 }

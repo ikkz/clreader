@@ -97,12 +97,8 @@ class _BookShelfPageState extends State<BookShelfPage> {
                 SimpleDialogs.alert(context: context, content: "请输入内容！");
                 return;
               }
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (context) {
-                return SearchPage(
-                  searchText: value["searchText"],
-                  name: value["name"],
-                );
+              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+                return SearchPage(searchText: value["searchText"]);
               }));
             });
           },
