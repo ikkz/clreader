@@ -19,7 +19,6 @@ dependencies:
   dio: ^1.0.14
   html: ^0.14.0+2
   gbk2utf8: ^1.0.0
-  fish_redux: any
 dev_dependencies:
   flutter_test:
     sdk: flutter

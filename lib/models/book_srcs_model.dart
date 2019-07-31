@@ -18,7 +18,7 @@ class BookSrcsModel extends BaseModel {
     }).toList();
   }
 
-  Future<BookSrc> getBookSrc(String sha) async {
+  Future<BookSrc> getBookSrc(String name) async {
     final db = await database;
     List<Map> maps = await db.query(tableBookSrc,
         columns: [
@@ -27,8 +27,8 @@ class BookSrcsModel extends BaseModel {
           columnBookSrcJs,
           columnBookSrcSHA
         ],
-        where: "$columnBookSrcSHA = ?",
-        whereArgs: [sha]);
+        where: "$columnBookSrcName = ?",
+        whereArgs: [name]);
     return maps.length > 0 ? BookSrc.fromMap(maps.first) : null;
   }
 

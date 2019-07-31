@@ -52,7 +52,7 @@ class DrawerPage extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(Icons.search),
-            title: Text("搜索设置"),
+            title: Text("阅读源管理"),
             onTap: () {
               Navigator.of(context).push(MaterialPageRoute(builder: (context) {
                 return BookSrcMgrPage();

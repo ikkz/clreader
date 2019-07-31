@@ -45,7 +45,7 @@ class BookSrc {
       for (var item in map['data']['books']) {
         var bookInfo = BookInfo();
         bookInfo.name = item['name'];
-        bookInfo.srcId = sha;
+        bookInfo.srcId = name;
         bookInfo.srcsUrl[sha] = item['bookUrl'];
         bookInfo.author = item['author'];
         bookInfo.urlCover = item['coverUrl'];
@@ -57,12 +57,27 @@ class BookSrc {
   }
 
   Future<String> getContent(String url) async {
-    print(await run.getContent(js, url));
-    return "";
+    Map<String, dynamic> map = json.decode(await run.getContent(js, url));
+    String content = '';
+    if (map['success']) {
+      content = map['data']['content'];
+    }
+    return content;
   }
 
   Future<List<Chapter>> getChapters(String url) async {
-    print(await run.getChapters(js, url));
-    return [];
+    Map<String, dynamic> map = json.decode(await run.getChapters(js, url));
+    List<Chapter> chapters = [];
+    if (map['success']) {
+      for (var item in map['data']['chapters']) {
+        var chapter = Chapter(
+            index: item['index'],
+            url: item['url'],
+            name: item['name'],
+            content: item['content']);
+        chapters.add(chapter);
+      }
+    }
+    return chapters;
   }
 }

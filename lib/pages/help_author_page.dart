@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:clipboard_manager/clipboard_manager.dart';
 
+import 'package:clreader/constents.dart';
+
 class HelpAuthorPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -28,11 +30,12 @@ class HelpAuthorPage extends StatelessWidget {
                       style: Theme.of(context).textTheme.title,
                     ),
                     subtitle: Text(
-                      "点击复制王者荣耀id:磊磊不打辅助",
+                      "点击复制王者荣耀id:${Strings.wzryId}",
                       style: Theme.of(context).textTheme.subtitle,
                     ),
                     onTap: () {
-                      ClipboardManager.copyToClipBoard("磊磊不打辅助").then((result) {
+                      ClipboardManager.copyToClipBoard(Strings.wzryId)
+                          .then((result) {
                         final snackBar = SnackBar(
                           content: Text("已复制到剪贴板"),
                         );

@@ -7,19 +7,18 @@ import 'package:clreader/constents.dart';
 final String prefIsNightMode = "isNightMode";
 final String prefThemeName = "themeName";
 final String prefSelectedBookShelf = "selectedBookShelf";
+final String prefSrcRepo = "srcRepo";
 
 class Preference extends BaseModel {
   bool isNightMode;
   String themeName;
+  String srcRepo;
 
-  void initIsNightMode() async {
+  void initPref() async {
     final prefs = await SharedPreferences.getInstance();
     isNightMode = prefs.getBool(prefIsNightMode) ?? false;
-  }
-
-  void initThemeName() async {
-    final prefs = await SharedPreferences.getInstance();
     themeName = prefs.getString(prefThemeName) ?? "蓝色";
+    srcRepo = prefs.getString(prefSrcRepo) ?? Strings.defaultSrcRepo;
   }
 
   Future<String> get selectedBookShelf async {
@@ -46,6 +45,13 @@ class Preference extends BaseModel {
   void setSelectedBookShelf(String selectedBookShelf) async {
     final prefs = await SharedPreferences.getInstance();
     prefs.setString(prefSelectedBookShelf, selectedBookShelf);
+    notifyListeners();
+  }
+
+  void setSrcRepo(String srcRepo) async {
+    final prefs = await SharedPreferences.getInstance();
+    prefs.setString(prefSrcRepo, srcRepo);
+    this.srcRepo = srcRepo;
     notifyListeners();
   }
 }

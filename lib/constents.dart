@@ -6,6 +6,8 @@ class Strings {
   static const String applicationUrl = "https://github.com/cildhdi/ClReader";
   static const String databaseName = "clr.db";
   static const String defaultBookShelf = "默认书架";
+  static const String defaultSrcRepo = "cildhdi/clsrc";
+  static const String wzryId = "磊磊天天守家";
 }
 
 const Map<String, MaterialColor> materialColorInfo = {
