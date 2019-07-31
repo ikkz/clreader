@@ -1,6 +1,7 @@
-package Util;
+package top.milesyang.clreader;
 import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
+import org.jsoup.Jsoup;
 
 public class Util {
     public static String urlEncode(String s, String charset) {
@@ -10,5 +11,9 @@ public class Util {
             e.printStackTrace();
             return "";
         }
+    }
+
+    public static void print(String s) {
+        System.out.println(s);
     }
 }

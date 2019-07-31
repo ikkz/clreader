@@ -27,15 +27,19 @@ class ClMainModel extends BaseModel
           BookShelf(name: Strings.defaultBookShelf, bookIds: []));
     }
 
-    _instance.insertBookSrc(BookSrc(enabled: true, name: "少年文学", sha: "fjdkfjdfs", js:
-'''
+    if ((await _instance.getBookSrcs()).length == 0) {
+      _instance.insertBookSrc(
+          BookSrc(enabled: true, name: "少年文学", sha: "fjdkfjdfs", js: '''
 /*
 website: https://www.snwx8.com/
 author: cildhdi
 */
 
-var Util = Java.type('Util');
-var Jsoup = Java.type('org.jsoup.Jsoup');
+var Jsoup = org.jsoup.Jsoup;
+
+function toJsStr(str) {
+    return "" + str;
+}
 
 function search(name) {
     var document = Jsoup.connect("https://www.snwx8.com/modules/article/search.php?searchkey=" + Util.urlEncode(name, "gbk")).get();
@@ -47,11 +51,11 @@ function search(name) {
         bookUrl = title.attributes().get("href");
         res.push({
             srcName: "少年文学",
-            name: title.text(),
-            author: li.selectFirst("span.s4 > a").text(),
-            bookUrl: bookUrl,
+            name: toJsStr(title.text()),
+            author: toJsStr(li.selectFirst("span.s4 > a").text()),
+            bookUrl: toJsStr(bookUrl),
             introduction: "暂无介绍",
-            coverUrl: bookUrl.replace("https://www.snwx8.com/book/", "https://www.snwx8.com/files/article/image/") + bookUrl.substr(bookUrl.length - 7, 6) + "s.jpg",
+            coverUrl: toJsStr(bookUrl.replace("https://www.snwx8.com/book/", "https://www.snwx8.com/files/article/image/") + bookUrl.substring(bookUrl.length() - 7, bookUrl.length() - 1) + "s.jpg"),
         });
         li = li.nextElementSibling();
     }
@@ -74,8 +78,8 @@ function getChapters(url) {
         var a = li.selectFirst("a");
         chapters.push({
             index: index++,
-            url: a.attributes().get("href"),
-            name: a.text(),
+            url: toJsStr(a.attributes().get("href")),
+            name: toJsStr(a.text()),
             content: ""
         });
         li = li.nextElementSibling();
@@ -94,11 +98,12 @@ function getContent(url) {
     return JSON.stringify({
         success: true,
         data: {
-            content: content.text()
+            content: toJsStr(content.text())
         }
     });
 }
 '''));
+    }
     return _instance;
   }
 

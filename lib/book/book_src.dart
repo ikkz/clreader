@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:convert';
 
 import 'package:clreader/book/book_info.dart';
 import 'package:clreader/book/chapter.dart';
@@ -38,8 +39,21 @@ class BookSrc {
   }
 
   Future<List<BookInfo>> search(String text) async {
-    print(await run.search(js, text));
-    return [];
+    Map<String, dynamic> map = json.decode(await run.search(js, text));
+    List<BookInfo> books = [];
+    if (map['success']) {
+      for (var item in map['data']['books']) {
+        var bookInfo = BookInfo();
+        bookInfo.name = item['name'];
+        bookInfo.srcId = sha;
+        bookInfo.srcsUrl[sha] = item['bookUrl'];
+        bookInfo.author = item['author'];
+        bookInfo.urlCover = item['coverUrl'];
+        bookInfo.introduction = item['introduction'];
+        books.add(bookInfo);
+      }
+    }
+    return books;
   }
 
   Future<String> getContent(String url) async {

@@ -32,9 +32,10 @@ class _SearchPageState extends State<SearchPage> {
   }
 
   void _search() async {
-    (await ClMainModel.of(context).getBookSrcs()).forEach((src) {
-      this.setState(() async {
-        _books.addAll(await src.search(widget.searchText));
+    (await ClMainModel.of(context).getBookSrcs()).forEach((src) async {
+      final books = await src.search(widget.searchText);
+      this.setState(() {
+        _books.addAll(books);
       });
     });
   }
