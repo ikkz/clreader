@@ -39,7 +39,8 @@ class BookSrc {
   }
 
   Future<List<BookInfo>> search(String text) async {
-    Map<String, dynamic> map = json.decode(await run.search(js, text));
+    String res = await run.search(js, text);
+    Map<String, dynamic> map = json.decode(res);
     List<BookInfo> books = [];
     if (map['success']) {
       for (var item in map['data']['books']) {

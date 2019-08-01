@@ -5,6 +5,7 @@ class TextEditDiaglog extends StatefulWidget {
   final String defaultText;
 
   TextEditDiaglog({@required this.defaultText, @required this.title});
+
   @override
   _TextEditDiaglogState createState() => _TextEditDiaglogState();
 }

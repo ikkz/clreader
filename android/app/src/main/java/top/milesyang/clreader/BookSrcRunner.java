@@ -6,6 +6,8 @@ import com.alibaba.fastjson.JSONObject;
 import org.jsoup.Jsoup;
 
 import java.util.HashMap;
+import java.io.PrintWriter;
+import java.io.StringWriter;
 
 import org.mozilla.javascript.Context;
 import org.mozilla.javascript.Function;
@@ -16,15 +18,19 @@ import org.mozilla.javascript.ScriptableObject;
 public class BookSrcRunner {
 	private static final String successKey = "success";
 	private static final String dataKey = "data";
+	private static final String msgKey = "msg";
 
 	private Context ctx;
 	private Scriptable scope;
 
-	private String result(Boolean success, JSONObject data) {
+	private String result(Boolean success, String msg, JSONObject data) {
 		HashMap res = new HashMap();
 		res.put(successKey, success);
 		if (data != null) {
 			res.put(dataKey, data);
+		}
+		if (msg != null) {
+			res.put(msgKey, msg);
 		}
 		return JSON.toJSONString(res);
 	}
@@ -33,7 +39,7 @@ public class BookSrcRunner {
 		try {
 			Object func = scope.get(name, scope);
 			if (!(func instanceof Function)) {
-				return result(false, null);
+				return result(false, name + "不是函数", null);
 			} else {
 				Object functionArgs[] = {arg};
 				Function f = (Function) func;
@@ -41,19 +47,19 @@ public class BookSrcRunner {
 				JSONObject jsonObject = JSON.parseObject(Context.toString(result));
 				if (jsonObject.containsKey(successKey) && jsonObject.containsKey(dataKey)) {
 					if (jsonObject.getBoolean(successKey)) {
-						return result(true, jsonObject.getJSONObject(dataKey));
+						return result(true, null, jsonObject.getJSONObject(dataKey));
 					} else
-						return result(false, null);
+						return result(false, "失败", null);
 
 				} else {
-					return result(false, null);
+					return result(false, "缺少返回值", null);
 				}
 			}
-
-
 		} catch (Exception e) {
 			e.printStackTrace();
-			return result(false, null);
+			StringWriter stringWriter = new StringWriter();
+			e.printStackTrace(new PrintWriter(stringWriter));
+			return result(false, stringWriter.toString(), null);
 		}
 	}
 
@@ -69,7 +75,9 @@ public class BookSrcRunner {
 			return "";
 		} catch (Exception e) {
 			e.printStackTrace();
-			return result(false, null);
+			StringWriter stringWriter = new StringWriter();
+			e.printStackTrace(new PrintWriter(stringWriter));
+			return result(false, stringWriter.toString(), null);
 		}
 	}
 

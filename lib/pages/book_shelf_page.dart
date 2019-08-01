@@ -6,7 +6,6 @@ import 'package:clreader/pages/drawer_page.dart';
 import 'package:clreader/book/book_shelf.dart';
 import 'package:clreader/components/book_item.dart';
 import 'package:clreader/constents.dart';
-import 'package:clreader/components/search_dialog.dart';
 import 'package:clreader/pages/serach_page.dart';
 import 'package:clreader/pages/book_detail_page.dart';
 import 'package:clreader/pages/read_page.dart';
@@ -84,23 +83,23 @@ class _BookShelfPageState extends State<BookShelfPage> {
       actions: <Widget>[
         IconButton(
           icon: Icon(Icons.search),
-          onPressed: () {
-            showDialog(
-                context: context,
-                builder: (context) {
-                  return SearchDialog();
-                }).then((value) {
-              if (value == null) {
-                return;
-              }
-              if (value["searchText"].isEmpty) {
-                SimpleDialogs.alert(context: context, content: "请输入内容！");
-                return;
-              }
-              Navigator.of(context).push(MaterialPageRoute(builder: (context) {
-                return SearchPage(searchText: value["searchText"]);
-              }));
-            });
+          onPressed: () async {
+            String value = await SimpleDialogs.edit_text(
+                context: context, title: "请输入书名", defaultText: "");
+            if (value == null) {
+              return;
+            }
+            if (value.isEmpty) {
+              SimpleDialogs.alert(context: context, content: "请输入内容！");
+              return;
+            }
+            final bookSrcs = await mainModel.getBookSrcs();
+            Navigator.of(context).push(MaterialPageRoute(builder: (context) {
+              return SearchPage(
+                searchText: value,
+                bookSrcs: bookSrcs,
+              );
+            }));
           },
         ),
       ],

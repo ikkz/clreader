@@ -39,9 +39,11 @@ public class MainActivity extends FlutterActivity {
 								@Override
 								public void run() {
 									BookSrcRunner runner = new BookSrcRunner();
-									runner.eval((String) methodCall.argument("js"));
-									Message msg = handler.obtainMessage(1,
-											(Object) runner.invoke(methodCall.method, (String) methodCall.argument("str")));
+									String res = runner.eval((String) methodCall.argument("js"));
+									if (res.isEmpty()) {
+										res = runner.invoke(methodCall.method, (String) methodCall.argument("str"));
+									}
+									Message msg = handler.obtainMessage(1, (Object) res);
 									handler.sendMessage(msg);
 								}
 							}).start();
